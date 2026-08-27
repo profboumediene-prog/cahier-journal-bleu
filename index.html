@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cahier Journal — Professeur de Français (Enseignement Secondaire)</title>
+<meta name="description" content="Cahier journal électronique et imprimable A4 pour le professeur de français de l'enseignement secondaire algérien.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Manrope:wght@400;500;600;700;800&family=Parisienne&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" defer></script>
+
+<!-- SDK Firebase Compat -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCEs9ECiK8B5sBa5t-8ige1UipR2UeV_T0",
+    authDomain: "cahier-journal-26-27.firebaseapp.com",
+    projectId: "cahier-journal-26-27",
+    storageBucket: "cahier-journal-26-27.firebasestorage.app",
+    messagingSenderId: "640606456487",
+    appId: "1:640606456487:web:8444d7761c7cc15519a982",
+    measurementId: "G-QVFVEP32NS"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  // Vérification de la session utilisateur
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      document.getElementById('zone-protegee').style.display = 'block';
+      document.getElementById('zone-connexion').style.display = 'none';
+    } else {
+      document.getElementById('zone-protegee').style.display = 'none';
+      document.getElementById('zone-connexion').style.display = 'block';
+    }
+  });
+
+  // Fonction de connexion avec E-mail et Code d'accès
+  function connexionFirebase() {
+    const email = document.getElementById('user-email').value;
+    const code = document.getElementById('user-code').value;
+
+    firebase.auth().signInWithEmailAndPassword(email, code)
+      .catch((error) => {
+        alert("Accès refusé : e-mail ou code d'accès incorrect !");
+      });
+  }
+</script>
+
+<style>
+/* =====================================================================
+   CAHIER JOURNAL — FRANÇAIS / SECONDAIRE (Algérie)
+   Feuille de style unique — écran + impression A4
+   Palette : encre indigo, violet royal, lilas, or antique, rose poudré, sauge
+   Typographie : Cormorant Garamond (titres) / Manrope (texte) / Parisienne (accent)
+   ===================================================================== */
+
+:root{
+  --ink:#241c46;
+  --v900:#2e2359;
+  --v800:#3b2d73;
+  --v700:#4b3b8f;
+  --v600:#5d4bab;
+  --v500:#7663c6;
+  --v400:#9585db;
+  --v300:#b8aae9;
+  --v200:#d9d1f6;
+  --v100:#ece7fb;
+  --v50:#f6f3fe;
+  --gold:#a8863a;
+  --gold-soft:#e3d2a6;
+  --rose:#c2789f;
+  --rose-soft:#f6dde8;
+  --sage:#a9c3a2;
+  --muted:#635f7d;
+  --line:#ded6f4;
+  --paper:#ffffff;
+
+  --display:"Cormorant Garamond","Times New Roman",serif;
+  --body:"Manrope","Segoe UI",system-ui,sans-serif;
+  --script:"Parisienne",cursive;
+
+  --pad-x:11mm;
+  --pad-y:11mm;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--body);
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #efeaff 0%, transparent 60%),
+    #eceaf4;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+  padding:18px 0 40px;
+}
+h1,h2,h3,h4{margin:0}
+p{margin:0}
+
+/* ------------------------- BARRE D'OUTILS ------------------------- */
+.toolbar{
+  max-width:210mm;margin:0 auto 22px;padding:14px 16px;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+  border:1px solid var(--v200);border-radius:16px;
+  box-shadow:0 12px 30px -18px rgba(43,29,94,.55);
+}
+.toolbar__top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  padding-bottom:11px;border-bottom:1px solid var(--v100)}
+.brand{display:flex;align-items:center;gap:11px}
+.brand__mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--v800),var(--v500));color:#fff;box-shadow:0 6px 14px -6px var(--v600)}
+.brand__mark svg{width:22px;height:22px}
+.brand h1{font-family:var(--display);font-size:19px;font-weight:700;letter-spacing:.01em;line-height:1.1}
+.brand p{font-size:11px;color:var(--muted);margin-top:2px}
+.actions{display:flex;flex-wrap:wrap;gap:7px}
+.btn{
+  font:600 11.5px/1 var(--body);border:1px solid var(--v200);background:#fff;color:var(--v800);
+  padding:9px 12px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+.btn:hover{background:var(--v50);transform:translateY(-1px);box-shadow:0 6px 12px -8px var(--v600)}
+.btn:focus-visible{outline:2px solid var(--v600);outline-offset:2px}
+.btn--primary{background:linear-gradient(135deg,var(--v800),var(--v600));color:#fff;border-color:transparent;
+  box-shadow:0 8px 16px -10px var(--v700)}
+.btn--primary:hover{background:linear-gradient(135deg,var(--v900),var(--v700))}
+.btn--ghost{background:transparent}
+.btn--danger{color:#9b2c4b;border-color:#f0d3dc}
+.btn--danger:hover{background:#fdf2f6}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;padding-top:11px;align-items:center}
+.tabs__label{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--v400);margin-right:4px}
+.tab{
+  font:600 11px/1 var(--body);border:1px solid var(--v100);background:#fff;color:var(--muted);
+  padding:7px 10px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.tab i{font-style:normal;font-size:9px;font-weight:800;color:var(--v400);letter-spacing:.04em}
+.tab:hover{border-color:var(--v300);color:var(--v800)}
+.tab.is-active{background:linear-gradient(135deg,var(--v800),var(--v600));color:#fff;border-color:transparent}
+.tab.is-active i{color:rgba(255,255,255,.75)}
+.hint{font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.hint b{color:var(--v700)}
+
+/* ------------------------------ FEUILLE A4 ------------------------------ */
+.sheet{
+  width:210mm;height:297mm;padding:var(--pad-y) var(--pad-x) 8mm;
+  background:var(--paper);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  font-size:10pt;
+}
+@media screen{
+  .sheet{margin:0 auto 26px;border-radius:12px;box-shadow:0 24px 50px -30px rgba(36,23,86,.55),0 0 0 1px rgba(36,23,86,.06)}
+}
+.sheet.hidden{display:none}
+
+.sheet::before{
+  content:"";position:absolute;inset:5mm;border:1px solid var(--v300);border-radius:2px;pointer-events:none;
+  box-shadow:0 0 0 3.2px #fff, 0 0 0 4px var(--v100);
+}
+.sheet > *{position:relative;z-index:1}
+
+/* ------------------------------ EN-TÊTES ------------------------------ */
+.head{text-align:center;margin-bottom:5mm}
+.head__eyebrow{font-size:7.5pt;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--v400)}
+.head h2{font-family:var(--display);font-size:23pt;font-weight:700;color:var(--v900);line-height:1.05;margin-top:1.5mm}
+.head h2 em{font-style:italic;color:var(--v600)}
+.head__sub{font-size:8.5pt;color:var(--muted);margin-top:1.5mm}
+.rule{display:flex;align-items:center;justify-content:center;gap:7px;margin:2.5mm 0 0}
+.rule span{height:1px;width:22mm;background:linear-gradient(90deg,transparent,var(--v300))}
+.rule span:last-of-type{background:linear-gradient(270deg,transparent,var(--v300))}
+.rule b{width:5px;height:5px;transform:rotate(45deg);background:var(--gold);display:block}
+
+/* ------------------------------ CARTES ------------------------------ */
+.card{
+  position:relative;border:1px solid var(--v200);border-radius:11px;background:linear-gradient(180deg,#fff, #fdfcff);
+  padding:6.5mm 4.5mm 4mm;
+}
+.card--tight{padding:5mm 4mm 3mm}
+.card__label{
+  position:absolute;top:-8px;left:12px;display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,var(--v800),var(--v600));color:#fff;
+  font-size:7pt;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:999px;box-shadow:0 4px 8px -5px var(--v700)}
+.card__label span{opacity:.7;font-weight:700}
+
+/* ------------------------------ GRILLE ------------------------------ */
+.grid{display:grid;gap:4mm}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g-5-7{grid-template-columns:5fr 7fr}
+.g-7-5{grid-template-columns:7fr 5fr}
+.g-8-4{grid-template-columns:8fr 4fr}
+.span2{grid-column:span 2}
+.span3{grid-column:span 3}
+
+/* ------------------------------ CHAMPS ------------------------------ */
+.field{display:flex;align-items:baseline;gap:5px;min-width:0}
+.field > label{font-size:8.5pt;font-weight:700;color:var(--v800);white-space:nowrap}
+.field--stack{display:block}
+.field--stack > label{display:block;margin-bottom:.8mm}
+.line{
+  flex:1;width:100%;min-width:0;border:0;border-bottom:1px dotted var(--v300);background:transparent;
+  font:500 9.5pt/1.5 var(--body);color:var(--ink);padding:0 3px 1px;outline:none}
+.line::placeholder{color:var(--v300);font-weight:400}
+.line:focus{border-bottom:1.4px solid var(--v600);background:var(--v50)}
+.line--c{text-align:center}
+.line--sm{font-size:8.5pt}
+.area{
+  width:100%;border:0;outline:none;resize:none;background-color:transparent;color:var(--ink);
+  font:500 9pt/4.6mm var(--body);padding:0 2px;
+  background-image:repeating-linear-gradient(180deg,transparent 0,transparent 4.4mm,var(--v100) 4.4mm,var(--v100) 4.6mm)}
+.area:focus{background-color:var(--v50)}
+.chk{display:inline-flex;align-items:center;gap:4px;font-size:8pt;font-weight:600;color:var(--v800);cursor:pointer;white-space:nowrap}
+.chk input{accent-color:var(--v600);width:11px;height:11px;margin:0;cursor:pointer}
+.chk--block{display:flex}
+.chks{display:flex;flex-wrap:wrap;gap:3px 10px}
+
+/* ------------------------------ TABLEAUX ------------------------------ */
+.tbl-wrap{border:1px solid var(--v200);border-radius:11px;overflow:hidden;background:#fff}
+table.tbl{width:100%;border-collapse:collapse;table-layout:fixed}
+.tbl thead th{
+  background:linear-gradient(135deg,var(--v800),var(--v600));color:#fff;
+  font-size:7.5pt;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:2.2mm 1.5mm;border-right:1px solid rgba(255,255,255,.22);line-height:1.25}
+.tbl thead th:last-child{border-right:0}
+.tbl tbody td{border-right:1px solid var(--v100);border-top:1px solid var(--v100);padding:1mm;vertical-align:top}
+.tbl tbody td:last-child{border-right:0}
+.tbl tbody tr:nth-child(even){background:var(--v50)}
+.tbl .rowhead{background:var(--v100);font-size:8.5pt;font-weight:700;color:var(--v800);text-align:center;vertical-align:middle}
+.tbl .num{text-align:center;font-size:8.5pt;font-weight:700;color:var(--v600);vertical-align:middle;background:var(--v50)}
+.tbl tbody tr:nth-child(even) .num{background:var(--v100)}
+.tbl td .line{border-bottom-color:var(--v200)}
+.slot{font-size:8pt;font-weight:700;color:var(--v800);text-align:center;line-height:1.2}
+.slot small{display:block;font-weight:500;color:var(--v400);font-size:7pt}
+.pause td{background:repeating-linear-gradient(135deg,var(--v50),var(--v50) 6px,#fff 6px,#fff 12px);
+  text-align:center;font-size:7.5pt;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--v400)}
+
+.tbl--dense tbody td{padding:.4mm .6mm}
+.tbl--dense thead th{
+  padding:1.3mm .8mm;font-size:6.4pt;font-weight:500;letter-spacing:.01em;
+  text-transform:none;line-height:1.25;word-break:break-word;hyphens:auto}
+.line--xs{font-size:7.2pt}
+.tbl--dense .num{font-size:8pt}
+.tbl--dense .line{padding:0 2px;line-height:1.25}
+.line--moy{font-weight:800;color:var(--v700)}
+
+.planner td{padding:1.2mm}
+.planner .cell{
+  border:1px solid var(--v200);border-radius:6px;background:#fff;height:100%;width:100%;
+  padding:1mm;resize:none;outline:none;border-color:var(--v200);
+  font:600 8pt/3.4mm var(--body);color:var(--v800);text-align:center}
+.planner .cell:focus{border-color:var(--v500);background:var(--v50)}
+.planner .vslot{
+  background:linear-gradient(180deg,var(--v600),var(--v800));color:#fff;border-radius:6px;
+  font-size:7.5pt;font-weight:800;letter-spacing:.06em;text-align:center;padding:1mm .5mm;line-height:1.15}
+
+/* ------------------------------ PASTILLES ------------------------------ */
+.chips{display:flex;flex-wrap:wrap;gap:2mm}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;padding:1.6mm 3mm;border-radius:999px;
+  background:var(--v50);border:1px solid var(--v200);color:var(--v800);
+  font-size:7.5pt;font-weight:700}
+.chip b{color:var(--gold);font-weight:800}
+.chip--gold{background:#fdfaf1;border-color:var(--gold-soft);color:#6c5518}
+.chip--rose{background:#fdf5f9;border-color:var(--rose-soft);color:#7d3f5c}
+.chip--rose b{color:var(--rose)}
+.chip small{font-weight:600;color:var(--muted)}
+
+/* ------------------------------ SIGNATURES ------------------------------ */
+.signs{display:grid;grid-template-columns:repeat(3,1fr);gap:6mm;margin-top:auto;padding-top:4mm}
+.sign{text-align:center}
+.sign p{font-size:8.5pt;font-weight:700;color:var(--v800);margin-bottom:1mm}
+.sign div{height:13mm;border-bottom:1px dotted var(--v300)}
+
+.planner tbody td{border:0;padding:0}
+.planner tbody tr{background:transparent!important}
+.planner thead th{border-right:0}
+
+/* ------------------------------ PIED DE PAGE ------------------------------ */
+.foot{
+  margin-top:auto;padding-top:2.5mm;border-top:1px solid var(--v100);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:7pt;color:var(--v400);letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.foot span:last-child{font-family:var(--display);font-size:9pt;letter-spacing:0;text-transform:none;color:var(--v600)}
+.pushtop{margin-top:auto}
+.signs + .foot,.pushtop + .foot{margin-top:4mm}
+
+/* ------------------------------ PAGE DE GARDE ------------------------------ */
+.cover{
+  background:
+    radial-gradient(70% 45% at 50% 0%, #f3efff 0%, transparent 65%),
+    radial-gradient(60% 40% at 50% 100%, #f6f2ff 0%, transparent 60%),
+    #fff;
+  text-align:center;justify-content:space-between;padding:14mm 14mm 12mm;
+}
+.cover::before{inset:7mm;border:1.5px solid var(--v200);border-radius:10px;box-shadow:0 0 0 3.6px #fff, 0 0 0 4.6px var(--v100)}
+.cover__frame{position:absolute;inset:9.5mm;border:1px solid var(--v100);border-radius:7px;pointer-events:none}
+.cover__rep{font-size:10pt;font-weight:700;letter-spacing:.02em;color:var(--v900)}
+.cover__min{font-size:9pt;color:var(--muted);margin-top:1.5mm}
+.cover__title{font-family:var(--display);font-size:58pt;font-weight:700;line-height:.94;color:var(--v900);letter-spacing:-.01em}
+.cover__title span{display:block;font-style:italic;color:var(--v700)}
+.cover__script{font-family:var(--script);font-size:22pt;color:var(--gold);margin-top:2mm}
+.cover__kicker{
+  display:inline-flex;align-items:center;gap:8px;margin-top:4mm;padding:2mm 5mm;border-radius:999px;
+  border:1px solid var(--v200);background:#fff;
+  font-size:8.5pt;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--v700)}
+.eiffel{width:52mm;height:85.8mm;color:var(--v700);display:block;margin:0 auto}
+.eiffel .glow{color:var(--gold)}
+.cover__art{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:6mm}
+.cover__art .halo{position:absolute;width:78mm;height:78mm;border-radius:50%;
+  background:radial-gradient(circle,#efe9ff 0%,rgba(255,255,255,0) 70%);bottom:-6mm;z-index:0}
+.cover__art .eiffel{position:relative;z-index:1}
+.cover__fields{display:grid;gap:3.5mm;max-width:130mm;margin:0 auto;text-align:left}
+.cover__fields .field > label{font-size:9.5pt}
+.cover__fields .line{font-size:11pt;font-weight:600;color:var(--v800);border-bottom-style:solid;border-bottom-color:var(--v200)}
+.cover__year{
+  margin-top:4mm;display:inline-block;padding:2.5mm 7mm;border-radius:10px;
+  background:linear-gradient(135deg,var(--v800),var(--v600));color:#fff;font-size:10pt;font-weight:700;letter-spacing:.06em}
+.cover__year span{display:inline-block;vertical-align:middle;margin-right:9px}
+.cover__year input{width:34mm;display:inline-block;vertical-align:middle;
+  background:transparent;border:0;border-bottom:1px dotted rgba(255,255,255,.6);
+  color:#fff;font:800 12pt var(--body);text-align:center;outline:none}
+.cover__quote{font-family:var(--display);font-style:italic;font-size:11pt;color:var(--v600)}
+
+/* ------------------------------ DIVERS ------------------------------ */
+.note{font-size:7.5pt;color:var(--muted);line-height:1.45}
+.legend{display:flex;flex-wrap:wrap;gap:2mm 4mm;font-size:7.5pt;color:var(--muted);font-weight:600}
+.legend b{color:var(--v700)}
+.sheet-tools{position:absolute;top:4mm;right:5mm;display:flex;gap:5px;z-index:5}
+.sheet-tools .btn{padding:5px 8px;font-size:10px}
+.sheet-tools .btn--pdf{background:linear-gradient(135deg,var(--v800),var(--v600));color:#fff;border-color:transparent}
+.sheet-tools .btn--pdf:hover{background:linear-gradient(135deg,var(--v900),var(--v700))}
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);opacity:0;
+  max-width:min(92vw,620px);text-align:center;line-height:1.45;
+  background:var(--v900);color:#fff;padding:11px 18px;border-radius:11px;
+  font:600 12px var(--body);box-shadow:0 16px 30px -16px rgba(0,0,0,.6);
+  transition:opacity .22s ease,transform .22s ease;z-index:99;pointer-events:none}
+.toast.is-on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------------- PAGE MENSUELLE : CALENDRIER & TÂCHES ---------------- */
+.cal-ctrl{
+  display:flex;flex-wrap:wrap;align-items:center;gap:7px 14px;margin-bottom:3.5mm;
+  padding:2mm 3.5mm;border:1px dashed var(--v200);border-radius:8px;background:var(--v50)}
+.cal-ctrl label{font-size:8.5pt;font-weight:700;color:var(--v800);display:inline-flex;align-items:center;gap:5px}
+.cal-ctrl select{
+  font:600 9pt var(--body);color:var(--v800);background:#fff;
+  border:1px solid var(--v200);border-radius:6px;padding:2px 6px;outline:none;cursor:pointer}
+.cal-ctrl select:focus{border-color:var(--v500)}
+.cal-layout{display:grid;grid-template-columns:88mm 1fr;gap:5mm;margin-bottom:4mm}
+.cal-layout > *{min-width:0}
+.cal-side{display:flex;flex-direction:column}
+.cal-year{
+  display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:3mm;
+  padding:1.6mm 4mm;border-radius:999px;background:var(--v100);border:1px solid var(--v200);
+  color:var(--v800);font-size:8.5pt;font-weight:700;letter-spacing:.08em}
+.cal-year input{width:28mm;font-size:9.5pt;font-weight:800;color:var(--v700);border-bottom:1px dotted var(--v300)}
+.cal thead th{font-size:7pt;padding:1.8mm .5mm;letter-spacing:.04em}
+.cal tbody tr{background:transparent!important;height:8.6mm}
+.cal tbody td{
+  text-align:center;vertical-align:middle;padding:0;
+  font-size:9.5pt;font-weight:600;color:var(--ink)}
+.cal tbody td.we{color:var(--v600);background:var(--v50);font-weight:800}
+.cal-note{font-size:7.5pt;color:var(--muted);margin-top:2mm;line-height:1.4}
+.cal-layout .card{display:flex;flex-direction:column}
+.cal-layout .area{flex:1;min-height:60mm}
+.tasks{display:grid}
+.task{display:flex;align-items:center;gap:3mm;height:8.4mm}
+.task input[type="checkbox"]{width:12px;height:12px;flex:none;margin:0;accent-color:var(--v600);cursor:pointer}
+.task .line{border-bottom-style:dotted}
+
+.sheet > .orn{position:absolute;z-index:0;pointer-events:none;display:block}
+.orn--fly1{width:13mm;height:9.8mm;top:15mm;right:14mm;opacity:.95}
+.orn--fly2{width:10mm;height:7.5mm;bottom:17mm;left:11mm;opacity:.85;transform:scaleX(-1)}
+.cover .orn--fly1{width:16mm;height:12mm;top:104mm;right:30mm}
+.cover .orn--fly2{width:12mm;height:9mm;top:128mm;left:32mm;opacity:.95}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ------------------------------ IMPRESSION ------------------------------ */
+@page{size:A4 portrait;margin:0}
+@media print{
+  html,body{background:#fff!important;padding:0!important;margin:0!important}
+  .no-print{display:none!important}
+  .sheet{
+    margin:0!important;border-radius:0!important;box-shadow:none!important;
+    width:210mm!important;height:297mm!important;
+    page-break-inside:avoid;break-inside:avoid;
+    page-break-before:always;break-before:page}
+  .sheet.is-first{page-break-before:auto;break-before:auto}
+  .sheet.hidden{display:none!important}
+  .line,.area,.cell{background-color:transparent!important}
+  .line:focus,.area:focus{background:transparent!important}
+}
+/* ------------------------------ EXPORT PDF ------------------------------ */
+body.exporting{padding:0!important;background:#fff!important}
+body.exporting .no-print{display:none!important}
+body.exporting .sheet{
+  margin:0!important;border-radius:0!important;box-shadow:none!important;
+  page-break-before:always;break-before:page;page-break-inside:avoid;break-inside:avoid}
+body.exporting .sheet.is-first{page-break-before:auto;break-before:auto}
+body.exporting .line,body.exporting .area,body.exporting .cell{background-color:transparent!important}
+body.exporting-flat *,body.exporting-flat *::before,body.exporting-flat *::after{background-image:none!important}
+body.exporting-flat .tbl thead th,body.exporting-flat .card__label,
+body.exporting-flat .cover__year,body.exporting-flat .planner .vslot{background-color:#4b3b8f!important;color:#fff!important}
+body.exporting-flat .sheet::after{background-color:#4b3b8f!important}
+body.exporting-flat .rowhead,body.exporting-flat .num,body.exporting-flat .pause td{background-color:#ece7fb!important}
+body.exporting-flat .card,body.exporting-flat .cover{background-color:#fff!important}
+.btn[disabled]{opacity:.55;cursor:progress}
+.pdf-echo{background-color:transparent}
+</style>
+</head>
+<body>
+
+  <!-- Écran de restriction Firebase -->
+  <div id="zone-connexion" style="text-align: center; padding: 60px 20px; font-family: sans-serif; min-height: 80vh;">
+    <h2>Accès restreint — Cahier Journal Numérique</h2>
+    <p style="margin-bottom: 24px; color: #555;">Veuillez saisir vos identifiants d'accès pour déverrouiller votre document.</p>
+    
+    <div style="max-width: 320px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;">
+      <input type="email" id="user-email" placeholder="Adresse e-mail" style="padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;">
+      <input type="password" id="user-code" placeholder="Code d'accès" style="padding: 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;">
+      <button onclick="connexionFirebase()" style="padding: 12px 24px; font-size: 16px; font-weight: bold; cursor: pointer; background-color: #4285F4; color: white; border: none; border-radius: 6px;">
+        Se connecter
+      </button>
+    </div>
+  </div>
+
+  <!-- Début du Cahier Journal protégé -->
+  <div id="zone-protegee" style="display: none;">
+
+<!-- ===================== BARRE D'OUTILS (non imprimée) ===================== -->
+<header class="toolbar no-print">
+  <div class="toolbar__top">
+    <div class="brand">
+      <div class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M8 7h7M8 10.5h7"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Cahier journal — Français, enseignement secondaire</h1>
+        <p>14 pages A4 prêtes à imprimer · saisie à l'écran ou à la main · programme algérien (1AS · 2AS · 3AS)</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" type="button" onclick="fillModel()">Remplir un exemple</button>
+      <button class="btn" type="button" onclick="saveAll()">Enregistrer</button>
+      <button class="btn btn--danger" type="button" onclick="clearAll()">Tout effacer</button>
+      <button class="btn" type="button" onclick="printCurrent()">Imprimer cette page</button>
+      <button class="btn" type="button" onclick="printAll()">Imprimer le cahier</button>
+    </div>
+  </div>
+  <nav class="tabs" aria-label="Navigation entre les pages">
+    <span class="tabs__label">Pages</span>
+    <button class="tab is-active" type="button" data-tab="0" onclick="showPage(0)"><i>00</i> Garde</button>
+    <button class="tab" type="button" data-tab="1" onclick="showPage(1)"><i>01</i> Informations</button>
+    <button class="tab" type="button" data-tab="2" onclick="showPage(2)"><i>02</i> Mon emploi du temps</button>
+    <button class="tab" type="button" data-tab="3" onclick="showPage(3)"><i>03</i> Tableau horaire</button>
+    <button class="tab" type="button" data-tab="4" onclick="showPage(4)"><i>04</i> Semaine (planner)</button>
+    <button class="tab" type="button" data-tab="5" onclick="showPage(5)"><i>05</i> Vacances &amp; compositions</button>
+    <button class="tab" type="button" data-tab="6" onclick="showPage(6)"><i>06</i> Séminaires</button>
+    <button class="tab" type="button" data-tab="7" onclick="showPage(7)"><i>07</i> Cahier de textes</button>
+    <button class="tab" type="button" data-tab="8" onclick="showPage(8)"><i>08</i> Liste des élèves</button>
+    <button class="tab" type="button" data-tab="9" onclick="showPage(9)"><i>09</i> Fiche de séance</button>
+    <button class="tab" type="button" data-tab="10" onclick="showPage(10)"><i>10</i> Planification</button>
+    <button class="tab" type="button" data-tab="11" onclick="showPage(11)"><i>11</i> Évaluation continue</button>
+    <button class="tab" type="button" data-tab="12" onclick="showPage(12)"><i>12</i> Conseil de classe</button>
+    <button class="tab" type="button" data-tab="13" onclick="showPage(13)"><i>13</i> Mois &amp; tâches</button>
+    <button class="tab" type="button" data-tab="all" onclick="showPage('all')">Tout afficher</button>
+  </nav>
+  <p class="hint">Chaque page possède, en haut à droite, un bouton <b>PDF</b> pour la télécharger individuellement (connexion internet requise la première fois). Pour tout le cahier en une fois, utilisez <b>Imprimer le cahier</b> : choisissez <b>A4</b>, marges <b>Aucune</b>, et cochez <b>Graphiques d'arrière-plan</b>, puis « Enregistrer au format PDF ». Les pages qui se dupliquent (cahier de textes, fiche de séance, liste des élèves, planification, <b>évaluation continue</b>, <b>conseil de classe</b> et <b>calendrier mensuel</b>) portent aussi un bouton <b>Dupliquer</b> en haut à droite. La saisie est conservée dans le navigateur.</p>
+</header>
+
+<main id="cahier">
+
+<!-- ============================== PAGE 0 · GARDE ============================== -->
+<section class="sheet cover" id="page-0" data-page="0" aria-label="Page de garde">
+  <div class="cover__frame" aria-hidden="true"></div>
+
+  <div>
+    <p class="cover__rep">République algérienne démocratique et populaire</p>
+    <p class="cover__min">Ministère de l'Éducation nationale — Direction de l'Éducation</p>
+  </div>
+
+  <div>
+    <h1 class="cover__title">Cahier <span>journal</span></h1>
+    <p class="cover__script">Langue française</p>
+    <p class="cover__kicker">Enseignement secondaire · 1AS · 2AS · 3AS</p>
+  </div>
+
+  <div class="cover__art">
+    <div class="halo" aria-hidden="true"></div>
+    <svg class="eiffel" width="200" height="330" viewBox="0 0 200 330" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration de la Tour Eiffel">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="100" y1="10" x2="100" y2="34"/>
+        <path d="M94 34h12"/>
+        <path d="M95 34c-1 20-2 34-4 48"/>
+        <path d="M105 34c1 20 2 34 4 48"/>
+        <path d="M89 82h22"/>
+        <path d="M91 82c-3 26-6 44-9 60"/>
+        <path d="M109 82c3 26 6 44 9 60"/>
+        <path d="M80 142h40"/>
+        <path d="M82 142c-4 24-8 44-13 64"/>
+        <path d="M118 142c4 24 8 44 13 64"/>
+        <path d="M67 206h66"/>
+        <path d="M69 206c-7 34-20 66-39 96"/>
+        <path d="M131 206c7 34 20 66 39 96"/>
+        <path d="M55 254h90"/>
+        <path d="M62 302c4-40 72-40 76 0" stroke-width="2"/>
+        <path d="M22 302h156" stroke-width="2.6"/>
+      </g>
+      <g fill="none" stroke="currentColor" stroke-width="1" opacity=".45">
+        <path d="M89 82 111 142M111 82 89 142M80 142 118 206M120 142 82 206"/>
+        <path d="M67 206 55 254M133 206 145 254M55 254 69 206M145 254 131 206"/>
+        <path d="M95 40h10M93 56h14M91 70h18M86 100h28M83 120h34"/>
+      </g>
+      <g class="glow" fill="currentColor" opacity=".9">
+        <circle cx="100" cy="6" r="3.2"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="cover__fields">
+    <div class="field"><label for="c_ens">Enseignant(e) :</label><input class="line" type="text" id="c_ens"></div>
+    <div class="field"><label for="c_etab">Établissement :</label><input class="line" type="text" id="c_etab"></div>
+    <div class="grid g2">
+      <div class="field"><label for="c_com">Commune :</label><input class="line" type="text" id="c_com"></div>
+      <div class="field"><label for="c_wil">Wilaya :</label><input class="line" type="text" id="c_wil"></div>
+    </div>
+    <div class="field"><label for="c_niv">Niveaux pris en charge :</label><input class="line" type="text" id="c_niv"></div>
+  </div>
+
+  <div>
+    <div class="cover__year"><span>Année scolaire</span><input type="text" id="c_annee" value="2026 - 2027"></div>
+    <p class="cover__quote" style="margin-top:5mm">« Enseigner, c'est semer aujourd'hui les graines de demain. »</p>
+  </div>
+</section>
+
+<!-- ======================== PAGE 1 · INFORMATIONS ======================== -->
+<section class="sheet hidden" id="page-1" data-page="1" aria-label="Informations personnelles et professionnelles">
+  <header class="head">
+    <p class="head__eyebrow">Fiche d'identité de l'enseignant(e)</p>
+    <h2>Informations <em>personnelles &amp; professionnelles</em></h2>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <div class="grid g-5-7" style="margin-bottom:5mm">
+    <section class="card">
+      <p class="card__label"><span>01</span> État civil</p>
+      <div class="grid" style="gap:3.6mm">
+        <div class="field field--stack"><label for="i_nom">Nom et prénom</label><input class="line" type="text" id="i_nom"></div>
+        <div class="field field--stack"><label for="i_naiss">Date et lieu de naissance</label><input class="line" type="text" id="i_naiss"></div>
+        <div class="field field--stack"><label for="i_adr1">Adresse</label><input class="line" type="text" id="i_adr1"><input class="line" type="text" id="i_adr2" style="margin-top:2.5mm"></div>
+        <div class="field field--stack"><label for="i_tel">Téléphone</label><input class="line" type="text" id="i_tel"></div>
+        <div class="field field--stack"><label for="i_mail">Adresse électronique</label><input class="line" type="email" id="i_mail"></div>
+        <div class="field field--stack"><label for="i_urg">Personne à prévenir (urgence)</label><input class="line" type="text" id="i_urg"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="card__label"><span>02</span> Situation professionnelle</p>
+      <div class="grid g2" style="gap:2.6mm 4mm">
+        <div class="field"><label for="i_mat">Matricule :</label><input class="line" type="text" id="i_mat"></div>
+        <div class="field"><label for="i_rec">Recrutement :</label><input class="line" type="text" id="i_rec"></div>
+        <div class="field"><label for="i_corps">Corps :</label><input class="line" type="text" id="i_corps"></div>
+        <div class="field"><label for="i_grade">Grade :</label><input class="line" type="text" id="i_grade"></div>
+        <div class="field"><label for="i_fonc">Fonction :</label><input class="line" type="text" id="i_fonc"></div>
+        <div class="field"><label for="i_mat_ens">Matière :</label><input class="line" type="text" id="i_mat_ens" value="Langue française"></div>
+        <div class="field span2"><label for="i_niveaux">Niveaux et classes pris en charge :</label><input class="line" type="text" id="i_niveaux"></div>
+        <div class="field span2"><label for="i_etab">Établissement d'affectation :</label><input class="line" type="text" id="i_etab"></div>
+        <div class="field"><label for="i_commune">Commune :</label><input class="line" type="text" id="i_commune"></div>
+        <div class="field"><label for="i_wilaya">Wilaya :</label><input class="line" type="text" id="i_wilaya"></div>
+        <div class="field"><label for="i_anc_g">Ancienneté générale :</label><input class="line" type="text" id="i_anc_g"></div>
+        <div class="field"><label for="i_anc_p">Dans le poste :</label><input class="line" type="text" id="i_anc_p"></div>
+        <div class="field span2"><label for="i_dipl">Diplôme(s) obtenu(s) :</label><input class="line" type="text" id="i_dipl"></div>
+        <div class="field span2"><label for="i_form">Établissement de formation :</label><input class="line" type="text" id="i_form"></div>
+        <div class="field"><label for="i_annee">Année scolaire :</label><input class="line" type="text" id="i_annee"></div>
+        <div class="field"><label for="i_horaire">Volume horaire :</label><input class="line" type="text" id="i_horaire"></div>
+      </div>
+      <p class="note" style="margin-top:3mm">Corps : PES · PEM · PEP — Grade : professeur, professeur principal, professeur formateur.</p>
+    </section>
+  </div>
+
+  <section class="card" style="margin-bottom:5mm">
+    <p class="card__label"><span>03</span> Accompagnement &amp; encadrement</p>
+    <div class="grid g-7-5">
+      <div class="grid" style="gap:3.2mm">
+        <div class="field"><label for="i_acc_nom">Professeur accompagnateur :</label><input class="line" type="text" id="i_acc_nom"></div>
+        <div class="field"><label for="i_acc_fonc">Fonction :</label><input class="line" type="text" id="i_acc_fonc"></div>
+        <div class="field"><label for="i_insp">Inspecteur(rice) de la matière :</label><input class="line" type="text" id="i_insp"></div>
+        <div class="field"><label for="i_coord">Coordinateur(rice) de la cellule :</label><input class="line" type="text" id="i_coord"></div>
+      </div>
+      <div class="grid" style="gap:3.2mm">
+        <div class="field"><label for="i_acc_tel">Téléphone :</label><input class="line" type="text" id="i_acc_tel"></div>
+        <div class="field field--stack"><label>Signature</label><div style="height:16mm;border-bottom:1px dotted var(--v300)"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <p class="card__label"><span>04</span> Observations &amp; remarques</p>
+    <textarea class="area" id="i_obs" rows="6"></textarea>
+  </section>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Informations</span><span>01</span></footer>
+</section>
+
+<!-- ==================== PAGE 2 · MON EMPLOI DU TEMPS ==================== -->
+<section class="sheet hidden" id="page-2" data-page="2" aria-label="Mon emploi du temps">
+  <header class="head">
+    <p class="head__eyebrow">Organisation hebdomadaire</p>
+    <h2>Mon <em>emploi du temps</em></h2>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <section class="card card--tight" style="margin-bottom:5mm">
+    <div class="grid g2" style="gap:3mm 6mm">
+      <div class="field"><label for="e_etab">Établissement :</label><input class="line" type="text" id="e_etab"></div>
+      <div class="field"><label for="e_annee">Année scolaire :</label><input class="line" type="text" id="e_annee"></div>
+      <div class="field"><label for="e_ens">Enseignant(e) :</label><input class="line" type="text" id="e_ens"></div>
+      <div class="field"><label for="e_classes">Classes :</label><input class="line" type="text" id="e_classes"></div>
+    </div>
+  </section>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <colgroup><col style="width:20mm"><col span="8"></colgroup>
+      <thead>
+        <tr>
+          <th>Jours</th>
+          <th>08:00<br>09:00</th><th>09:00<br>10:00</th><th>10:00<br>11:00</th><th>11:00<br>12:00</th>
+          <th>12:00<br>13:00</th><th>13:30<br>14:30</th><th>14:30<br>15:30</th><th>15:30<br>16:30</th>
+        </tr>
+      </thead>
+      <tbody id="edt-body"></tbody>
+    </table>
+  </div>
+
+  <div class="legend" style="margin-top:4mm">
+    <span><b>Notation conseillée :</b> niveau / filière — salle</span>
+    <span>Ex. <b>3AS SE</b> — S08</span>
+    <span>Ex. <b>2AS L&amp;Ph</b> — S12</span>
+    <span>Ex. <b>1AS TC L</b> — S04</span>
+  </div>
+
+  <div class="signs">
+    <div class="sign"><p>Enseignant(e)</p><div></div></div>
+    <div class="sign"><p>Directeur(rice)</p><div></div></div>
+    <div class="sign"><p>Inspecteur(rice)</p><div></div></div>
+  </div>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Emploi du temps</span><span>02</span></footer>
+</section>
+
+<!-- ==================== PAGE 3 · TABLEAU D'EMPLOI DU TEMPS ==================== -->
+<section class="sheet hidden" id="page-3" data-page="3" aria-label="Tableau d'emploi du temps">
+  <header class="head">
+    <p class="head__eyebrow">Répartition par créneau horaire</p>
+    <h2>Tableau <em>d'emploi du temps</em></h2>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <section class="card card--tight" style="margin-bottom:5mm">
+    <div class="grid" style="gap:3mm">
+      <div class="field"><label for="t_etab">Établissement :</label><input class="line" type="text" id="t_etab"></div>
+      <div class="grid g2" style="gap:3mm 6mm">
+        <div class="field"><label for="t_ens">Enseignant(e) :</label><input class="line" type="text" id="t_ens"></div>
+        <div class="field"><label for="t_dir">Directeur(rice) :</label><input class="line" type="text" id="t_dir"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <colgroup><col style="width:30mm"><col span="5"></colgroup>
+      <thead>
+        <tr><th>Horaires</th><th>Dimanche</th><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th></tr>
+      </thead>
+      <tbody id="tab-body"></tbody>
+    </table>
+  </div>
+
+  <p class="note" style="margin-top:4mm">Indiquer pour chaque créneau : la classe, la salle et, le cas échéant, l'activité prévue (compréhension de l'oral, compréhension de l'écrit, points de langue, production écrite, remédiation).</p>
+
+  <div class="signs">
+    <div class="sign"><p>Enseignant(e)</p><div></div></div>
+    <div class="sign"><p>Directeur(rice)</p><div></div></div>
+    <div class="sign"><p>Inspecteur(rice)</p><div></div></div>
+  </div>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Tableau horaire</span><span>03</span></footer>
+</section>
+
+<!-- ============ PAGE 4 · EMPLOI DU TEMPS HEBDOMADAIRE (PLANNER) ============ -->
+<section class="sheet hidden" id="page-4" data-page="4" aria-label="Emploi du temps hebdomadaire">
+  <header class="head">
+    <p class="head__eyebrow">Vue d'ensemble de la semaine</p>
+    <h2>Emploi <em>du temps</em></h2>
+    <p class="head__sub">Créneaux horaires · jours de la semaine · classes et salles</p>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <div class="tbl-wrap" style="border:0">
+    <table class="tbl planner" style="border-collapse:separate;border-spacing:1.4mm">
+      <colgroup><col style="width:13mm"><col span="5"></colgroup>
+      <thead>
+        <tr>
+          <th style="background:transparent"></th>
+          <th style="border-radius:7px">Dimanche</th><th style="border-radius:7px">Lundi</th><th style="border-radius:7px">Mardi</th>
+          <th style="border-radius:7px">Mercredi</th><th style="border-radius:7px">Jeudi</th>
+        </tr>
+      </thead>
+      <tbody id="planner-body"></tbody>
+    </table>
+  </div>
+
+  <p class="note" style="margin-top:3mm">Dernière ligne : rappel des classes prises en charge (niveau, filière et effectif) — utile pour la préparation et le suivi des séances.</p>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Semaine type</span><span>04</span></footer>
+</section>
+
+<!-- ============ PAGE 5 · VACANCES, JOURS FÉRIÉS & COMPOSITIONS ============ -->
+<section class="sheet hidden" id="page-5" data-page="5" aria-label="Vacances, jours fériés et compositions">
+  <header class="head">
+    <p class="head__eyebrow">Calendrier officiel de l'année</p>
+    <h2>Vacances, jours fériés <em>&amp; compositions</em></h2>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <section class="card card--tight" style="margin-bottom:5mm">
+    <div class="grid g3" style="gap:3mm 6mm">
+      <div class="field"><label for="v_etab">Établissement :</label><input class="line" type="text" id="v_etab"></div>
+      <div class="field"><label for="v_annee">Année scolaire :</label><input class="line" type="text" id="v_annee"></div>
+      <div class="field"><label for="v_ens">Enseignant(e) :</label><input class="line" type="text" id="v_ens"></div>
+    </div>
+  </section>
+
+  <h3 class="head__eyebrow" style="text-align:left;margin-bottom:2mm">1 · Vacances scolaires</h3>
+  <div class="tbl-wrap" style="margin-bottom:6mm">
+    <table class="tbl">
+      <colgroup><col style="width:45mm"><col><col><col style="width:32mm"></colgroup>
+      <thead><tr><th>Type de vacances</th><th>Date de début</th><th>Date de fin</th><th>Nombre de jours</th></tr></thead>
+      <tbody id="vac-body"></tbody>
+    </table>
+  </div>
+
+  <h3 class="head__eyebrow" style="text-align:left;margin-bottom:2mm">2 · Jours fériés &amp; journées commémoratives</h3>
+  <div class="tbl-wrap" style="margin-bottom:6mm">
+    <table class="tbl">
+      <colgroup><col style="width:28mm"><col style="width:26mm"><col><col style="width:52mm"></colgroup>
+      <thead><tr><th>Date</th><th>Jour</th><th>Intitulé</th><th>Observations</th></tr></thead>
+      <tbody id="fer-body"></tbody>
+    </table>
+  </div>
+
+  <section class="card">
+    <p class="card__label">3 · Dates des compositions</p>
+    <div class="grid" style="gap:4mm">
+      <div class="field"><label for="v_c1">Composition du 1<sup>er</sup> trimestre :</label><input class="line" type="text" id="v_c1"></div>
+      <div class="field"><label for="v_c2">Composition du 2<sup>e</sup> trimestre :</label><input class="line" type="text" id="v_c2"></div>
+      <div class="field"><label for="v_c3">Composition du 3<sup>e</sup> trimestre :</label><input class="line" type="text" id="v_c3"></div>
+      <div class="field"><label for="v_bac">Épreuves blanches / baccalauréat blanc :</label><input class="line" type="text" id="v_bac"></div>
+    </div>
+  </section>
+
+  <div class="signs">
+    <div class="sign"><p>Enseignant(e)</p><div></div></div>
+    <div class="sign"><p>Directeur(rice)</p><div></div></div>
+    <div class="sign"><p>Inspecteur(rice)</p><div></div></div>
+  </div>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Calendrier</span><span>05</span></footer>
+</section>
+
+<!-- ============ PAGE 6 · SÉMINAIRES & JOURNÉES PÉDAGOGIQUES ============ -->
+<section class="sheet hidden" id="page-6" data-page="6" aria-label="Séminaires et journées pédagogiques">
+  <header class="head">
+    <p class="head__eyebrow">Formation continue</p>
+    <h2>Séminaires <em>&amp; journées pédagogiques</em></h2>
+    <p class="head__sub">Ateliers, conférences, regroupements de la cellule de matière</p>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <div class="tbl-wrap" style="margin-bottom:6mm">
+    <table class="tbl">
+      <colgroup><col style="width:22mm"><col style="width:38mm"><col style="width:30mm"><col style="width:22mm"><col style="width:16mm"><col><col style="width:30mm"></colgroup>
+      <thead>
+        <tr><th>Date</th><th>Thème du séminaire</th><th>Organisme / Intervenant</th><th>Lieu</th><th>Durée</th><th>Points essentiels à retenir</th><th>Réinvestissement en classe</th></tr>
+      </thead>
+      <tbody id="sem-body"></tbody>
+    </table>
+  </div>
+
+  <h3 class="head__eyebrow" style="text-align:left;margin-bottom:2mm">Journées pédagogiques &amp; réunions de coordination</h3>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <colgroup><col style="width:28mm"><col style="width:45mm"><col></colgroup>
+      <thead><tr><th>Date</th><th>Lieu</th><th>Thème / Décisions retenues</th></tr></thead>
+      <tbody id="jp-body"></tbody>
+    </table>
+  </div>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Formation continue</span><span>06</span></footer>
+</section>
+
+<!-- ============ PAGE 7 · CAHIER DE TEXTES / TRAVAIL À EFFECTUER ============ -->
+<section class="sheet hidden" id="page-7" data-page="7" aria-label="Travail à effectuer">
+  <div class="sheet-tools no-print">
+    <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
+  </div>
+  <header class="head">
+    <p class="head__eyebrow">Cahier de textes</p>
+    <h2>Travail <em>à effectuer</em></h2>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <section class="card card--tight" style="margin-bottom:4mm">
+    <div class="grid g3" style="gap:3mm 6mm">
+      <div class="field"><label for="w_classe">Classe(s) :</label><input class="line" type="text" id="w_classe"></div>
+      <div class="field"><label for="w_periode">Semaine / Mois :</label><input class="line" type="text" id="w_periode"></div>
+      <div class="field"><label for="w_trim">Trimestre :</label><input class="line" type="text" id="w_trim"></div>
+    </div>
+  </section>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <colgroup><col style="width:22mm"><col style="width:22mm"><col style="width:24mm"><col><col style="width:34mm"></colgroup>
+      <thead><tr><th>Date</th><th>Classe</th><th>Heure</th><th>Travail à effectuer · activités &amp; contenus</th><th>Observation</th></tr></thead>
+      <tbody id="work-body"></tbody>
+    </table>
+  </div>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Cahier de textes</span><span>07</span></footer>
+</section>
+
+<!-- ==================== PAGE 8 · LISTE DES ÉLÈVES ==================== -->
+<section class="sheet hidden" id="page-8" data-page="8" aria-label="Liste des élèves">
+  <div class="sheet-tools no-print">
+    <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
+  </div>
+  <header class="head">
+    <p class="head__eyebrow">Gestion de classe</p>
+    <h2>Liste <em>des élèves</em></h2>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <section class="card card--tight" style="margin-bottom:4mm">
+    <div class="grid g4" style="gap:3mm 5mm">
+      <div class="field"><label for="l_classe">Classe :</label><input class="line" type="text" id="l_classe"></div>
+      <div class="field"><label for="l_niveau">Niveau / filière :</label><input class="line" type="text" id="l_niveau"></div>
+      <div class="field"><label for="l_eff">Effectif :</label><input class="line" type="text" id="l_eff"></div>
+      <div class="field"><label for="l_annee">Année :</label><input class="line" type="text" id="l_annee"></div>
+      <div class="field span2"><label for="l_trim">Trimestre :</label><input class="line" type="text" id="l_trim"></div>
+      <div class="field span2"><label for="l_del">Délégué(e) de classe :</label><input class="line" type="text" id="l_del"></div>
+    </div>
+  </section>
+
+  <div class="tbl-wrap">
+    <table class="tbl tbl--dense">
+      <colgroup>
+        <col style="width:8mm"><col><col style="width:21mm"><col style="width:7mm">
+        <col style="width:14mm"><col style="width:14mm"><col style="width:14mm"><col style="width:14mm"><col style="width:14mm">
+        <col style="width:34mm">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>N°</th><th>Nom et prénom</th><th>Date de<br>naissance</th><th>S</th>
+          <th>Évaluation<br>continue /20</th><th>TP ·<br>expression<br>orale /20</th>
+          <th>Moyenne des<br>devoirs /20</th><th>Composition<br>/20</th><th>Moyenne<br>/20</th>
+          <th>Observations / suivi</th>
+        </tr>
+      </thead>
+      <tbody id="students-body"></tbody>
+    </table>
+  </div>
+
+  <div style="display:flex;align-items:flex-end;gap:5mm;margin-top:2.5mm">
+    <p class="note" style="flex:1">Moyenne = (évaluation continue + TP/expression orale + moyenne des devoirs + composition × 2) ÷ 5. L'appréciation s'affiche automatiquement ; moyenne et observation restent modifiables et vos saisies sont conservées.</p>
+    <div class="field" style="width:24mm"><label for="l_g">Garçons :</label><input class="line line--c" type="text" id="l_g"></div>
+    <div class="field" style="width:22mm"><label for="l_f">Filles :</label><input class="line line--c" type="text" id="l_f"></div>
+    <div class="field" style="width:42mm"><label for="l_moy">Moyenne de la classe :</label><input class="line line--c" type="text" id="l_moy"></div>
+  </div>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Liste des élèves</span><span>08</span></footer>
+</section>
+
+<!-- ==================== PAGE 9 · FICHE DE PRÉPARATION (SÉANCE) ==================== -->
+<section class="sheet hidden" id="page-9" data-page="9" aria-label="Fiche de préparation d'une séance">
+  <div class="sheet-tools no-print">
+    <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
+  </div>
+  <header class="head" style="margin-bottom:3.5mm">
+    <p class="head__eyebrow">Préparation pédagogique</p>
+    <h2>Fiche <em>de séance</em>
+      <span style="font-family:var(--body);font-size:11pt;font-weight:700;color:var(--v600)">n°
+        <input class="line line--c" type="text" id="f_num" style="width:14mm;display:inline-block">
+      </span>
+    </h2>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <div class="tbl-wrap" style="margin-bottom:3mm">
+    <table class="tbl" style="table-layout:auto">
+      <tbody>
+        <tr>
+          <td class="rowhead" style="width:24mm">Date</td><td style="width:34mm"><input class="line line--c" type="text" id="f_date"></td>
+          <td class="rowhead" style="width:30mm">Classe / Niveau</td><td><input class="line line--c" type="text" id="f_classe"></td>
+          <td class="rowhead" style="width:18mm">Durée</td><td style="width:24mm"><input class="line line--c" type="text" id="f_duree" value="1 h"></td>
+        </tr>
+        <tr><td class="rowhead">Projet</td><td colspan="5"><input class="line" type="text" id="f_projet"></td></tr>
+        <tr>
+          <td class="rowhead">Séquence</td><td colspan="2"><input class="line" type="text" id="f_sequence"></td>
+          <td class="rowhead">Objet d'étude</td><td colspan="2"><input class="line" type="text" id="f_objet"></td>
+        </tr>
+        <tr>
+          <td class="rowhead">Activité</td>
+          <td colspan="5">
+            <div class="chks">
+              <label class="chk"><input type="checkbox" id="f_a_co"> Compréhension de l'oral</label>
+              <label class="chk"><input type="checkbox" id="f_a_po"> Production de l'oral</label>
+              <label class="chk"><input type="checkbox" id="f_a_ce"> Compréhension de l'écrit</label>
+              <label class="chk"><input type="checkbox" id="f_a_pl"> Points de langue</label>
+              <label class="chk"><input type="checkbox" id="f_a_pre"> Préparation à l'écrit</label>
+              <label class="chk"><input type="checkbox" id="f_a_pe"> Production écrite</label>
+              <label class="chk"><input type="checkbox" id="f_a_cr"> Compte rendu de l'expression écrite</label>
+              <label class="chk"><input type="checkbox" id="f_a_diag"> Évaluation diagnostique</label>
+              <label class="chk"><input type="checkbox" id="f_a_rem"> Remédiation</label>
+              <label class="chk"><input type="checkbox" id="f_a_lanc"> Lancement du projet / de la séquence</label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="rowhead">Compétence visée</td>
+          <td colspan="5"><input class="line" type="text" id="f_comp"></td>
+        </tr>
+        <tr>
+          <td class="rowhead">Objectifs</td>
+          <td colspan="5">
+            <div class="grid" style="gap:1.6mm">
+              <div class="field"><label for="f_savoir">Savoir :</label><input class="line line--sm" type="text" id="f_savoir"></div>
+              <div class="field"><label for="f_sf">Savoir-faire :</label><input class="line line--sm" type="text" id="f_sf"></div>
+              <div class="field"><label for="f_se">Savoir-être :</label><input class="line line--sm" type="text" id="f_se"></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="rowhead">Supports</td>
+          <td colspan="5">
+            <div class="chks">
+              <label class="chk"><input type="checkbox" id="f_s_manuel"> Manuel scolaire, p. <input class="line line--c" type="text" id="f_s_page" style="width:13mm"></label>
+              <label class="chk"><input type="checkbox" id="f_s_texte"> Texte / document distribué</label>
+              <label class="chk"><input type="checkbox" id="f_s_audio"> Audio / vidéo</label>
+              <label class="chk"><input type="checkbox" id="f_s_tice"> Data-show · TICE</label>
+              <label class="chk"><input type="checkbox" id="f_s_tab"> Tableau</label>
+              <label class="chk"><input type="checkbox" id="f_s_autre"> Autre : <input class="line" type="text" id="f_s_autre_txt" style="width:32mm"></label>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="head__eyebrow" style="text-align:left;margin-bottom:1.8mm">Déroulement de la séance</h3>
+  <div class="tbl-wrap" style="margin-bottom:3mm">
+    <table class="tbl">
+      <colgroup><col style="width:38mm"><col><col style="width:26mm"></colgroup>
+      <thead><tr><th>Étape · durée</th><th>Démarche : consignes, activités de l'enseignant(e) et des élèves</th><th>Modalité</th></tr></thead>
+      <tbody id="phases-body"></tbody>
+    </table>
+  </div>
+
+  <div class="grid g-8-4" style="gap:3mm;margin-bottom:3mm">
+    <section class="card card--tight">
+      <p class="card__label">Critères de réussite</p>
+      <div class="grid" style="gap:1.6mm">
+        <div class="field"><label>✓</label><input class="line line--sm" type="text" id="f_cr1"></div>
+        <div class="field"><label>✓</label><input class="line line--sm" type="text" id="f_cr2"></div>
+        <div class="field"><label>✓</label><input class="line line--sm" type="text" id="f_cr3"></div>
+      </div>
+    </section>
+    <section class="card card--tight">
+      <p class="card__label">Travail à la maison</p>
+      <div style="display:grid;gap:1.2mm">
+        <label class="chk chk--block"><input type="checkbox" id="f_d_ex"> Exercices d'application</label>
+        <label class="chk chk--block"><input type="checkbox" id="f_d_lec"> Lecture / recherche</label>
+        <label class="chk chk--block"><input type="checkbox" id="f_d_prod"> Production écrite</label>
+        <label class="chk chk--block"><input type="checkbox" id="f_d_projet"> Avancement du projet</label>
+      </div>
+    </section>
+  </div>
+
+  <section class="card card--tight" style="margin-bottom:3mm">
+    <p class="card__label">Différenciation · soutien &amp; approfondissement</p>
+    <textarea class="area" id="f_diff" rows="2"></textarea>
+  </section>
+
+  <section class="card card--tight pushtop">
+    <p class="card__label">Bilan de la séance</p>
+    <div class="grid g-8-4" style="gap:4mm">
+      <div>
+        <p class="note" style="font-weight:700;color:var(--v800);margin-bottom:1mm">Difficultés rencontrées &amp; ajustements pour la séance suivante</p>
+        <textarea class="area" id="f_bilan" rows="2"></textarea>
+      </div>
+      <div style="display:grid;gap:1.2mm;align-content:start">
+        <label class="chk chk--block"><input type="checkbox" id="f_b_ok"> Objectif atteint</label>
+        <label class="chk chk--block"><input type="checkbox" id="f_b_cons"> À consolider</label>
+        <label class="chk chk--block"><input type="checkbox" id="f_b_reaj"> À réajuster</label>
+        <label class="chk chk--block"><input type="checkbox" id="f_b_report"> Séance reportée</label>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Fiche de séance</span><span>09</span></footer>
+</section>
+
+<!-- ==================== PAGE 10 · PLANIFICATION HEBDOMADAIRE ==================== -->
+<section class="sheet hidden" id="page-10" data-page="10" aria-label="Planification hebdomadaire">
+  <div class="sheet-tools no-print">
+    <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
+  </div>
+  <header class="head" style="margin-bottom:4mm">
+    <p class="head__eyebrow">Planification &amp; progression</p>
+    <h2>Fiche <em>de planification hebdomadaire</em></h2>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <section class="card card--tight" style="margin-bottom:4mm">
+    <div class="grid g2" style="gap:2.6mm 6mm">
+      <div class="field"><label for="p_semaine">Semaine du :</label><input class="line" type="text" id="p_semaine"></div>
+      <div class="field"><label for="p_trim">Trimestre :</label><input class="line" type="text" id="p_trim"></div>
+      <div class="field"><label for="p_projet">Projet :</label><input class="line" type="text" id="p_projet"></div>
+      <div class="field"><label for="p_seq">Séquence :</label><input class="line" type="text" id="p_seq"></div>
+      <div class="field span2"><label for="p_obj">Objectif(s) d'apprentissage de la semaine :</label><input class="line" type="text" id="p_obj"></div>
+    </div>
+  </section>
+
+  <div class="tbl-wrap" style="margin-bottom:4mm">
+    <table class="tbl">
+      <colgroup><col style="width:24mm"><col style="width:20mm"><col style="width:30mm"><col><col style="width:36mm"></colgroup>
+      <thead><tr><th>Jour · date</th><th>Classe</th><th>Activité</th><th>Contenu, support &amp; objet d'étude</th><th>Traces écrites / devoirs</th></tr></thead>
+      <tbody id="plan-body"></tbody>
+    </table>
+  </div>
+
+  <section class="card card--tight" style="margin-bottom:4mm">
+    <p class="card__label">Progression de la séquence</p>
+    <div class="chips">
+      <span class="chip"><b>1</b> Compréhension de l'oral</span>
+      <span class="chip"><b>2</b> Production de l'oral</span>
+      <span class="chip"><b>3</b> Compréhension de l'écrit</span>
+      <span class="chip"><b>4</b> Points de langue</span>
+      <span class="chip"><b>5</b> Préparation à l'écrit</span>
+      <span class="chip"><b>6</b> Production écrite</span>
+      <span class="chip"><b>7</b> Compte rendu &amp; remédiation</span>
+      <span class="chip chip--gold">Évaluation de la séquence</span>
+    </div>
+    <p class="note" style="margin-top:2.5mm">Repères des objets d'étude : <b>1AS</b> vulgarisation scientifique · discours objectivé · fait divers · appel · nouvelle — <b>2AS</b> discours objectivé · reportage &amp; interview · appel · discours théâtral · nouvelle fantastique — <b>3AS</b> textes d'histoire · débat d'idées · appel · nouvelle d'anticipation.</p>
+  </section>
+
+  <div class="grid g2 pushtop" style="gap:4mm">
+    <section class="card card--tight">
+      <p class="card__label">Bilan de la semaine</p>
+      <textarea class="area" id="p_bilan" rows="3"></textarea>
+    </section>
+    <section class="card card--tight">
+      <p class="card__label">Reports &amp; rattrapages</p>
+      <textarea class="area" id="p_report" rows="3"></textarea>
+    </section>
+  </div>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Planification</span><span>10</span></footer>
+</section>
+
+<!-- ==================== PAGE 11 · ÉVALUATION CONTINUE ==================== -->
+<section class="sheet hidden" id="page-11" data-page="11" aria-label="Évaluation continue">
+  <div class="sheet-tools no-print">
+    <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
+  </div>
+  <header class="head" style="margin-bottom:3.5mm">
+    <p class="head__eyebrow">Suivi quotidien des apprentissages</p>
+    <h2>Évaluation <em>continue</em></h2>
+    <p class="head__sub">Participation · devoirs · exercices · interrogations · tenue du cahier · assiduité</p>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <section class="card card--tight" style="margin-bottom:3mm">
+    <div class="grid g4" style="gap:2.6mm 5mm">
+      <div class="field"><label for="ev_classe">Classe :</label><input class="line" type="text" id="ev_classe"></div>
+      <div class="field"><label for="ev_niveau">Niveau / filière :</label><input class="line" type="text" id="ev_niveau"></div>
+      <div class="field"><label for="ev_trim">Trimestre :</label><input class="line" type="text" id="ev_trim"></div>
+      <div class="field"><label for="ev_annee">Année :</label><input class="line" type="text" id="ev_annee"></div>
+      <div class="field span2"><label for="ev_projet">Projet / séquence évalués :</label><input class="line" type="text" id="ev_projet"></div>
+      <div class="field span2"><label for="ev_periode">Période évaluée :</label><input class="line" type="text" id="ev_periode"></div>
+    </div>
+  </section>
+
+  <div class="chips" style="margin-bottom:2.5mm">
+    <span class="chip"><b>P</b> Participation orale</span>
+    <span class="chip"><b>D</b> Devoirs à la maison</span>
+    <span class="chip"><b>E</b> Exercices en classe</span>
+    <span class="chip chip--rose"><b>I</b> Interrogations écrites <small>coef. 2</small></span>
+    <span class="chip"><b>T</b> Tenue du cahier</span>
+    <span class="chip"><b>C</b> Assiduité &amp; comportement</span>
+    <span class="chip chip--gold">Note reportée en « évaluation continue » p. 08</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="tbl tbl--dense">
+      <colgroup>
+        <col style="width:7mm"><col>
+        <col style="width:13mm"><col style="width:13mm"><col style="width:13mm">
+        <col style="width:13mm"><col style="width:13mm"><col style="width:13mm">
+        <col style="width:15mm"><col style="width:33mm">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>N°</th><th>Nom et prénom</th>
+          <th>P<br>/20</th><th>D<br>/20</th><th>E<br>/20</th><th>I<br>/20 ×2</th><th>T<br>/20</th><th>C<br>/20</th>
+          <th>Note continue<br>/20</th><th>Observations · progrès constatés</th>
+        </tr>
+      </thead>
+      <tbody id="eval-body"></tbody>
+    </table>
+  </div>
+
+  <div style="display:flex;align-items:flex-end;gap:5mm;margin-top:2.5mm">
+    <p class="note" style="flex:1">Note continue = (P + D + E + I x 2 + T + C) / 7, sur les colonnes renseignées. Elle reste modifiable : votre saisie remplace alors le calcul.</p>
+    <div class="field" style="width:30mm"><label for="ev_moy_cl">Moyenne classe :</label><input class="line line--c" type="text" id="ev_moy_cl"></div>
+    <div class="field" style="width:26mm"><label for="ev_sup">Élèves ≥ 10 :</label><input class="line line--c" type="text" id="ev_sup"></div>
+    <div class="field" style="width:52mm"><label for="ev_rem">Remédiation prévue :</label><input class="line" type="text" id="ev_rem"></div>
+  </div>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Évaluation continue</span><span>11</span></footer>
+</section>
+
+<!-- ==================== PAGE 12 · CONSEIL DE CLASSE ==================== -->
+<section class="sheet hidden" id="page-12" data-page="12" aria-label="Réunion du conseil de classe">
+  <div class="sheet-tools no-print">
+    <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
+  </div>
+  <header class="head" style="margin-bottom:4mm">
+    <p class="head__eyebrow">Vie pédagogique de l'établissement</p>
+    <h2>Réunion du <em>conseil de classe</em></h2>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <section class="card card--tight" style="margin-bottom:4.5mm;padding-top:6mm">
+    <p class="card__label"><span>01</span> Identification de la séance</p>
+    <div class="grid g3" style="gap:2.8mm 5mm">
+      <div class="field"><label for="cc_classe">Classe :</label><input class="line" type="text" id="cc_classe"></div>
+      <div class="field"><label for="cc_niveau">Niveau / filière :</label><input class="line" type="text" id="cc_niveau"></div>
+      <div class="field"><label for="cc_eff">Effectif :</label><input class="line" type="text" id="cc_eff"></div>
+      <div class="field"><label for="cc_trim">Trimestre :</label><input class="line" type="text" id="cc_trim"></div>
+      <div class="field"><label for="cc_date">Date :</label><input class="line" type="text" id="cc_date"></div>
+      <div class="field"><label for="cc_heure">Horaire :</label><input class="line" type="text" id="cc_heure"></div>
+      <div class="field"><label for="cc_lieu">Lieu :</label><input class="line" type="text" id="cc_lieu"></div>
+      <div class="field"><label for="cc_pres">Président(e) :</label><input class="line" type="text" id="cc_pres"></div>
+      <div class="field"><label for="cc_pp">Prof. principal(e) :</label><input class="line" type="text" id="cc_pp"></div>
+      <div class="field span3"><label for="cc_ordre">Ordre du jour :</label><input class="line" type="text" id="cc_ordre"></div>
+    </div>
+  </section>
+
+  <h3 class="head__eyebrow" style="text-align:left;margin-bottom:2mm">1 · Membres du conseil</h3>
+  <div class="tbl-wrap" style="margin-bottom:4.5mm">
+    <table class="tbl">
+      <colgroup><col style="width:46mm"><col><col style="width:15mm"><col style="width:15mm"><col style="width:50mm"></colgroup>
+      <thead><tr><th>Qualité</th><th>Nom et prénom</th><th>Présent</th><th>Absent</th><th>Observations</th></tr></thead>
+      <tbody id="cc-body"></tbody>
+    </table>
+  </div>
+
+  <h3 class="head__eyebrow" style="text-align:left;margin-bottom:2mm">2 · Résultats de la classe en français</h3>
+  <section class="card card--tight" style="margin-bottom:4.5mm">
+    <div class="grid g3" style="gap:2.6mm 5mm">
+      <div class="field"><label for="cc_moy">Moyenne de la classe :</label><input class="line line--c" type="text" id="cc_moy"></div>
+      <div class="field"><label for="cc_max">Note la plus haute :</label><input class="line line--c" type="text" id="cc_max"></div>
+      <div class="field"><label for="cc_min">Note la plus basse :</label><input class="line line--c" type="text" id="cc_min"></div>
+      <div class="field"><label for="cc_sup">Élèves ≥ 10 :</label><input class="line line--c" type="text" id="cc_sup"></div>
+      <div class="field"><label for="cc_inf">Élèves &lt; 10 :</label><input class="line line--c" type="text" id="cc_inf"></div>
+      <div class="field"><label for="cc_taux">Taux de réussite :</label><input class="line line--c" type="text" id="cc_taux"></div>
+    </div>
+  </section>
+
+  <h3 class="head__eyebrow" style="text-align:left;margin-bottom:2mm">3 · Décisions &amp; mentions retenues</h3>
+  <div class="tbl-wrap" style="margin-bottom:4.5mm">
+    <table class="tbl">
+      <colgroup><col style="width:46mm"><col><col style="width:20mm"></colgroup>
+      <thead><tr><th>Mention / décision</th><th>Élèves concernés</th><th>Nombre</th></tr></thead>
+      <tbody id="cc-dec-body"></tbody>
+    </table>
+  </div>
+
+  <div class="grid g2" style="gap:4mm;margin-bottom:4mm">
+    <section class="card card--tight">
+      <p class="card__label">Difficultés relevées &amp; remédiation</p>
+      <textarea class="area" id="cc_diff" rows="3"></textarea>
+    </section>
+    <section class="card card--tight">
+      <p class="card__label">Recommandations du conseil</p>
+      <textarea class="area" id="cc_reco" rows="3"></textarea>
+    </section>
+  </div>
+
+  <div class="signs" style="padding-top:3mm">
+    <div class="sign"><p>Professeur(e) principal(e)</p><div style="height:11mm"></div></div>
+    <div class="sign"><p>Enseignant(e) de français</p><div style="height:11mm"></div></div>
+    <div class="sign"><p>Chef d'établissement</p><div style="height:11mm"></div></div>
+  </div>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Conseil de classe</span><span>12</span></footer>
+</section>
+
+<!-- ==================== PAGE 13 · CALENDRIER MENSUEL & TÂCHES ==================== -->
+<section class="sheet hidden" id="page-13" data-page="13" aria-label="Calendrier mensuel et tâches">
+  <div class="sheet-tools no-print">
+    <button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>
+  </div>
+  <header class="head" style="margin-bottom:4mm">
+    <p class="head__eyebrow">Organisation du mois</p>
+    <h2>Mon mois <em data-cal="titre">de septembre</em></h2>
+    <div class="rule"><span></span><b></b><span></span></div>
+  </header>
+
+  <div class="cal-ctrl no-print">
+    <label for="cal_mois">Mois
+      <select id="cal_mois" data-cal="mois"></select>
+    </label>
+    <label for="cal_an">Année
+      <select id="cal_an" data-cal="an"></select>
+    </label>
+    <span class="note">Le calendrier se met à jour tout seul. Dupliquez la page pour obtenir chaque mois de l'année ; ce bandeau ne s'imprime pas.</span>
+  </div>
+
+  <div class="cal-layout">
+    <div class="cal-side">
+      <div class="cal-year"><span>Année scolaire</span><input class="line line--c" type="text" id="cal_as" value="2026 - 2027"></div>
+      <div class="tbl-wrap">
+        <table class="tbl cal">
+          <thead>
+            <tr><th>Dim</th><th>Lun</th><th>Mar</th><th>Mer</th><th>Jeu</th><th>Ven</th><th>Sam</th></tr>
+          </thead>
+          <tbody data-cal="grid"></tbody>
+        </table>
+      </div>
+      <p class="cal-note">Semaine de travail : dimanche → jeudi. Vendredi et samedi apparaissent en couleur.</p>
+    </div>
+
+    <section class="card card--tight">
+      <p class="card__label">Notes du mois</p>
+      <textarea class="area" id="cal_notes" rows="13"></textarea>
+    </section>
+  </div>
+
+  <h3 class="head__eyebrow" style="text-align:left;margin-bottom:2.5mm">Tâches à faire</h3>
+  <div class="tasks" data-cal="tasks"></div>
+
+  <footer class="foot"><span>Cahier journal · Français</span><span>Mois &amp; tâches</span><span>13</span></footer>
+</section>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =====================================================================
+   Cahier journal — logique de l'application
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  function input(id, cls, val) {
+    var e = document.createElement('input');
+    e.type = 'text'; e.className = 'line' + (cls ? ' ' + cls : ''); e.id = id;
+    if (val) e.value = val;
+    return e;
+  }
+  function area(id, rows, cls) {
+    var e = document.createElement('textarea');
+    e.className = 'area' + (cls ? ' ' + cls : ''); e.id = id; e.rows = rows || 2;
+    return e;
+  }
+  function checkbox(id) {
+    var lab = document.createElement('label');
+    lab.className = 'chk';
+    lab.style.justifyContent = 'center';
+    lab.style.width = '100%';
+    var c = document.createElement('input');
+    c.type = 'checkbox'; c.id = id;
+    lab.appendChild(c);
+    return lab;
+  }
+  function cell(child, cls, style) {
+    var td = document.createElement('td');
+    if (cls) td.className = cls;
+    if (style) td.setAttribute('style', style);
+    if (child) td.appendChild(child);
+    return td;
+  }
+  function textCell(html, cls, style) {
+    var td = cell(null, cls, style);
+    td.innerHTML = html;
+    return td;
+  }
+  function row(tbody, height) {
+    var tr = document.createElement('tr');
+    if (height) tr.style.height = height;
+    tbody.appendChild(tr);
+    return tr;
+  }
+  function byId(id) { return document.getElementById(id); }
+
+  var DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi'];
+
+  (function () {
+    var tb = byId('edt-body'); if (!tb) return;
+    DAYS.forEach(function (d, i) {
+      var tr = row(tb, '26mm');
+      tr.appendChild(textCell(d, 'rowhead'));
+      for (var c = 1; c <= 8; c++) tr.appendChild(cell(area('edt_' + i + '_' + c, 3, 'line--c')));
+    });
+  })();
+
+  (function () {
+    var tb = byId('tab-body'); if (!tb) return;
+    var slots = ['08:00|09:00', '09:00|10:00', '10:00|11:00', '11:00|12:00', '13:00|14:00', '14:00|15:00', '15:00|16:00'];
+    slots.forEach(function (s, i) {
+      if (i === 4) {
+        var pauseRow = row(tb, '8mm');
+        pauseRow.className = 'pause';
+        var pauseCell = textCell('Pause méridienne');
+        pauseCell.colSpan = 6;
+        pauseRow.appendChild(pauseCell);
+      }
+      var tr = row(tb, '20mm');
+      var parts = s.split('|');
+      tr.appendChild(textCell('<div class="slot">' + parts[0] + '<small>jusqu\'à ' + parts[1] + '</small></div>', 'rowhead'));
+      for (var c = 1; c <= 5; c++) tr.appendChild(cell(area('tab_' + i + '_' + c, 3, 'line--c')));
+    });
+  })();
+
+  (function () {
+    var tb = byId('planner-body'); if (!tb) return;
+    var slots = ['8h - 9h', '9h - 10h', '10h - 11h', '11h - 12h', '13h - 14h', '14h - 15h', '15h - 16h', '16h - 17h'];
+    slots.forEach(function (s, i) {
+      var tr = row(tb, '20mm');
+      tr.appendChild(textCell(s.replace(' - ', '<br>'), 'vslot'));
+      for (var c = 1; c <= 5; c++) {
+        var t = document.createElement('textarea');
+        t.className = 'cell'; t.id = 'pl_' + i + '_' + c; t.rows = 3;
+        t.style.height = '17mm';
+        tr.appendChild(cell(t));
+      }
+    });
+    var last = row(tb, '16mm');
+    last.appendChild(textCell('Classes', 'vslot'));
+    for (var c = 1; c <= 5; c++) {
+      var t2 = document.createElement('textarea');
+      t2.className = 'cell'; t2.id = 'pl_cls_' + c; t2.rows = 2; t2.style.height = '13mm';
+      last.appendChild(cell(t2));
+    }
+  })();
+
+  (function () {
+    var tb = byId('vac-body'); if (!tb) return;
+    ['Vacances d\'automne', 'Vacances d\'hiver', 'Vacances de printemps', 'Vacances d\'été'].forEach(function (v, i) {
+      var tr = row(tb, '10.5mm');
+      tr.appendChild(textCell(v, 'rowhead', 'text-align:left;padding-left:3mm'));
+      tr.appendChild(cell(input('vac_' + i + '_d', 'line--c')));
+      tr.appendChild(cell(input('vac_' + i + '_f', 'line--c')));
+      tr.appendChild(cell(input('vac_' + i + '_n', 'line--c')));
+    });
+    var fb = byId('fer-body');
+    for (var i = 1; i <= 6; i++) {
+      var tr = row(fb, '9mm');
+      tr.appendChild(cell(input('fer_' + i + '_date', 'line--c')));
+      tr.appendChild(cell(input('fer_' + i + '_jour', 'line--c')));
+      tr.appendChild(cell(input('fer_' + i + '_nom')));
+      tr.appendChild(cell(input('fer_' + i + '_obs')));
+    }
+  })();
+
+  (function () {
+    var tb = byId('sem-body'); if (!tb) return;
+    for (var i = 1; i <= 4; i++) {
+      var tr = row(tb, '27mm');
+      tr.appendChild(cell(input('sem_' + i + '_date', 'line--c')));
+      tr.appendChild(cell(area('sem_' + i + '_theme', 5)));
+      tr.appendChild(cell(area('sem_' + i + '_org', 5)));
+      tr.appendChild(cell(input('sem_' + i + '_lieu', 'line--c')));
+      tr.appendChild(cell(input('sem_' + i + '_duree', 'line--c')));
+      tr.appendChild(cell(area('sem_' + i + '_pts', 5)));
+      tr.appendChild(cell(area('sem_' + i + '_reinv', 5)));
+    }
+    var jb = byId('jp-body');
+    for (var j = 1; j <= 6; j++) {
+      var tr2 = row(jb, '10.5mm');
+      tr2.appendChild(cell(input('jp_' + j + '_date', 'line--c')));
+      tr2.appendChild(cell(input('jp_' + j + '_lieu')));
+      tr2.appendChild(cell(input('jp_' + j + '_theme')));
+    }
+  })();
+
+  (function () {
+    var tb = byId('work-body'); if (!tb) return;
+    for (var i = 1; i <= 12; i++) {
+      var tr = row(tb, '15mm');
+      tr.appendChild(cell(input('w_' + i + '_date', 'line--c')));
+      tr.appendChild(cell(input('w_' + i + '_classe', 'line--c')));
+      tr.appendChild(cell(input('w_' + i + '_heure', 'line--c')));
+      tr.appendChild(cell(area('w_' + i + '_travail', 3)));
+      tr.appendChild(cell(area('w_' + i + '_obs', 3)));
+    }
+  })();
+
+  (function () {
+    var tb = byId('students-body'); if (!tb) return;
+    for (var i = 1; i <= 36; i++) {
+      var tr = row(tb, '5.4mm');
+      tr.appendChild(textCell(i, 'num'));
+      tr.appendChild(cell(input('el_' + i + '_nom', 'line--sm')));
+      tr.appendChild(cell(input('el_' + i + '_naiss', 'line--c line--sm')));
+      tr.appendChild(cell(input('el_' + i + '_sexe', 'line--c line--sm')));
+      ['ec', 'tp', 'dev', 'compo'].forEach(function (role) {
+        var f = input('el_' + i + '_' + role, 'line--c line--sm');
+        f.setAttribute('data-role', role);
+        f.setAttribute('inputmode', 'decimal');
+        tr.appendChild(cell(f));
+      });
+      var moy = input('el_' + i + '_moy', 'line--c line--sm line--moy');
+      moy.setAttribute('data-role', 'moy');
+      tr.appendChild(cell(moy));
+      var obs = input('el_' + i + '_obs', 'line--xs');
+      obs.setAttribute('data-role', 'obs');
+      tr.appendChild(cell(obs));
+    }
+  })();
+
+  var COEFS = { ec: 1, tp: 1, dev: 1, compo: 2 };
+
+  function toNumber(v) {
+    if (!v) return null;
+    var x = parseFloat(String(v).replace(',', '.').trim());
+    return isNaN(x) ? null : x;
+  }
+  function appreciation(v) {
+    if (v === null) return '';
+    if (v >= 16) return 'Excellent travail';
+    if (v >= 14) return 'Très bon niveau';
+    if (v >= 12) return 'Bon travail, à poursuivre';
+    if (v >= 10) return 'Moyen, peut mieux faire';
+    if (v >= 8) return 'Insuffisant, à régulariser';
+    if (v >= 5) return 'Faible : remédiation';
+    return 'Difficultés : suivi ciblé';
+  }
+  function computeRow(tr) {
+    var moy = tr.querySelector('[data-role="moy"]');
+    if (!moy) return;
+    var total = 0, coef = 0;
+    Object.keys(COEFS).forEach(function (role) {
+      var f = tr.querySelector('[data-role="' + role + '"]');
+      var v = f ? toNumber(f.value) : null;
+      if (v !== null) { total += v * COEFS[role]; coef += COEFS[role]; }
+    });
+    var val = coef ? total / coef : null;
+    if (moy.getAttribute('data-manual') === '1') {
+      val = toNumber(moy.value);
+    } else {
+      moy.value = (val === null) ? '' : val.toFixed(2).replace('.', ',');
+    }
+    var obs = tr.querySelector('[data-role="obs"]');
+    if (obs && obs.getAttribute('data-manual') !== '1') obs.value = appreciation(val);
+  }
+  document.addEventListener('input', function (e) {
+    var role = e.target.getAttribute && e.target.getAttribute('data-role');
+    if (!role) return;
+    if (role === 'moy' || role === 'obs') {
+      e.target.setAttribute('data-manual', e.target.value.trim() === '' ? '0' : '1');
+    }
+    var tr = e.target.closest('tr');
+    if (tr) computeRow(tr);
+  });
+
+  (function () {
+    var tb = byId('phases-body'); if (!tb) return;
+    var phases = [
+      ['Éveil de l\'intérêt · mise en route', '05'],
+      ['Imprégnation · observation &amp; analyse', '15'],
+      ['Analyse · conceptualisation', '15'],
+      ['Synthèse · trace écrite', '15'],
+      ['Évaluation · réinvestissement', '10']
+    ];
+    phases.forEach(function (p, i) {
+      var tr = row(tb, '12mm');
+      var head = document.createElement('td');
+      head.className = 'rowhead';
+      head.style.textAlign = 'left';
+      head.style.padding = '1.5mm 2mm';
+      head.innerHTML = '<div style="font-weight:700;line-height:1.2">' + p[0] + '</div>' +
+        '<div style="font-size:7.5pt;font-weight:500;color:var(--v600);margin-top:1mm">Durée : ' +
+        '<input class="line line--c" type="text" id="ph_' + i + '_d" value="' + p[1] + '" style="width:9mm;display:inline-block"> min</div>';
+      tr.appendChild(head);
+      tr.appendChild(cell(area('ph_' + i + '_act', 2)));
+      var m = document.createElement('td');
+      m.style.padding = '1.2mm';
+      m.innerHTML =
+        '<label class="chk chk--block"><input type="checkbox" id="ph_' + i + '_ind"> Individuel</label>' +
+        '<label class="chk chk--block"><input type="checkbox" id="ph_' + i + '_bin"> Binôme</label>' +
+        '<label class="chk chk--block"><input type="checkbox" id="ph_' + i + '_grp"> Groupe</label>' +
+        '<label class="chk chk--block"><input type="checkbox" id="ph_' + i + '_col"> Collectif</label>';
+      tr.appendChild(m);
+    });
+  })();
+
+  (function () {
+    var tb = byId('plan-body'); if (!tb) return;
+    for (var i = 1; i <= 10; i++) {
+      var tr = row(tb, '10.5mm');
+      tr.appendChild(cell(input('pn_' + i + '_jour', 'line--c line--sm')));
+      tr.appendChild(cell(input('pn_' + i + '_classe', 'line--c line--sm')));
+      tr.appendChild(cell(input('pn_' + i + '_act', 'line--sm')));
+      tr.appendChild(cell(input('pn_' + i + '_contenu', 'line--sm')));
+      tr.appendChild(cell(input('pn_' + i + '_devoir', 'line--sm')));
+    }
+  })();
+
+  var EV_ROLES = ['part', 'dev', 'exo', 'int', 'cah', 'com'];
+  (function () {
+    var tb = byId('eval-body'); if (!tb) return;
+    for (var i = 1; i <= 28; i++) {
+      var tr = row(tb, '6mm');
+      tr.appendChild(textCell(i, 'num'));
+      tr.appendChild(cell(input('ev_' + i + '_nom', 'line--sm')));
+      EV_ROLES.forEach(function (role) {
+        var f = input('ev_' + i + '_' + role, 'line--c line--sm');
+        f.setAttribute('data-ev', role);
+        f.setAttribute('inputmode', 'decimal');
+        tr.appendChild(cell(f));
+      });
+      var moy = input('ev_' + i + '_moy', 'line--c line--sm line--moy');
+      moy.setAttribute('data-ev', 'moy');
+      tr.appendChild(cell(moy));
+      tr.appendChild(cell(input('ev_' + i + '_obs', 'line--xs')));
+    }
+  })();
+
+  var EV_COEFS = { part: 1, dev: 1, exo: 1, int: 2, cah: 1, com: 1 };
+
+  function computeEvalRow(tr) {
+    var moy = tr.querySelector('[data-ev="moy"]');
+    if (!moy || moy.getAttribute('data-manual') === '1') return;
+    var total = 0, coef = 0;
+    Object.keys(EV_COEFS).forEach(function (role) {
+      var f = tr.querySelector('[data-ev="' + role + '"]');
+      var v = f ? toNumber(f.value) : null;
+      if (v !== null) { total += v * EV_COEFS[role]; coef += EV_COEFS[role]; }
+    });
+    var val = coef ? total / coef : null;
+    moy.value = (val === null) ? '' : val.toFixed(2).replace('.', ',');
+  }
+  document.addEventListener('input', function (e) {
+    var role = e.target.getAttribute && e.target.getAttribute('data-ev');
+    if (!role) return;
+    if (role === 'moy') {
+      e.target.setAttribute('data-manual', e.target.value.trim() === '' ? '0' : '1');
+    }
+    var tr = e.target.closest('tr');
+    if (tr) computeEvalRow(tr);
+  });
+
+  (function () {
+    var tb = byId('cc-body'); if (!tb) return;
+    var membres = [
+      'Chef d\'établissement (président)',
+      'Conseiller(ère) principal(e) d\'éducation',
+      'Professeur(e) principal(e)',
+      'Enseignant(e) de français',
+      'Délégué(e) des élèves',
+      'Représentant(e) des parents'
+    ];
+    membres.forEach(function (q, i) {
+      var tr = row(tb, '7mm');
+      tr.appendChild(textCell(q, 'rowhead', 'text-align:left;padding-left:2.5mm;font-size:8pt'));
+      tr.appendChild(cell(input('cc_m_' + i + '_nom', 'line--sm')));
+      tr.appendChild(cell(checkbox('cc_m_' + i + '_p'), null, 'text-align:center;vertical-align:middle'));
+      tr.appendChild(cell(checkbox('cc_m_' + i + '_a'), null, 'text-align:center;vertical-align:middle'));
+      tr.appendChild(cell(input('cc_m_' + i + '_obs', 'line--sm')));
+    });
+
+    var db = byId('cc-dec-body');
+    var decisions = [
+      'Félicitations',
+      'Encouragements',
+      'Tableau d\'honneur',
+      'Avertissement — travail',
+      'Avertissement — conduite'
+    ];
+    decisions.forEach(function (d, i) {
+      var tr = row(db, '7mm');
+      tr.appendChild(textCell(d, 'rowhead', 'text-align:left;padding-left:2.5mm;font-size:8pt'));
+      tr.appendChild(cell(input('cc_d_' + i + '_eleves', 'line--sm')));
+      tr.appendChild(cell(input('cc_d_' + i + '_nb', 'line--c line--sm')));
+    });
+  })();
+
+  var MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+              'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+
+  function capitale(mot) { return mot.charAt(0).toUpperCase() + mot.slice(1); }
+  function titreDuMois(m) {
+    var nom = capitale(MOIS[m]);
+    return /^[AEIOUÂÉÈÊÎÔÛ]/.test(nom) ? ('d\u2019' + nom) : ('de ' + nom);
+  }
+  function renderCalendar(sheet) {
+    var selM = sheet.querySelector('[data-cal="mois"]');
+    var selA = sheet.querySelector('[data-cal="an"]');
+    var grid = sheet.querySelector('[data-cal="grid"]');
+    if (!selM || !selA || !grid) return;
+    var m = parseInt(selM.value, 10);
+    var y = parseInt(selA.value, 10);
+    if (isNaN(m) || isNaN(y)) return;
+    var premier = new Date(y, m, 1).getDay();
+    var nbJours = new Date(y, m + 1, 0).getDate();
+    var html = '', jour = 1;
+    for (var r = 0; r < 6; r++) {
+      html += '<tr>';
+      for (var c = 0; c < 7; c++) {
+        if ((r * 7 + c) < premier || jour > nbJours) {
+          html += '<td></td>';
+        } else {
+          html += '<td' + (c >= 5 ? ' class="we"' : '') + '>' + jour + '</td>';
+          jour++;
+        }
+      }
+      html += '</tr>';
+    }
+    grid.innerHTML = html;
+    var titre = sheet.querySelector('[data-cal="titre"]');
+    if (titre) titre.textContent = titreDuMois(m);
+  }
+  function renderAllCalendars() {
+    document.querySelectorAll('[data-cal="grid"]').forEach(function (g) {
+      var sh = g.closest('.sheet');
+      if (sh) renderCalendar(sh);
+    });
+  }
+  (function () {
+    var sheet = byId('page-13'); if (!sheet) return;
+    var selM = sheet.querySelector('[data-cal="mois"]');
+    var selA = sheet.querySelector('[data-cal="an"]');
+    var aujourd = new Date();
+    MOIS.forEach(function (nom, i) {
+      var o = document.createElement('option');
+      o.value = i; o.textContent = capitale(nom);
+      selM.appendChild(o);
+    });
+    for (var y = aujourd.getFullYear() - 1; y <= aujourd.getFullYear() + 4; y++) {
+      var oa = document.createElement('option');
+      oa.value = y; oa.textContent = y;
+      selA.appendChild(oa);
+    }
+    selM.value = aujourd.getMonth();
+    selA.value = aujourd.getFullYear();
+
+    var box = sheet.querySelector('[data-cal="tasks"]');
+    for (var i = 1; i <= 16; i++) {
+      var ligne = document.createElement('div');
+      ligne.className = 'task';
+      var c = document.createElement('input');
+      c.type = 'checkbox'; c.id = 'tk_' + i + '_ok';
+      ligne.appendChild(c);
+      ligne.appendChild(input('tk_' + i));
+      box.appendChild(ligne);
+    }
+    renderCalendar(sheet);
+  })();
+
+  document.addEventListener('change', function (e) {
+    if (e.target.getAttribute && e.target.getAttribute('data-cal')) {
+      var sh = e.target.closest('.sheet');
+      if (sh) renderCalendar(sh);
+    }
+  });
+
+  var current = 0;
+  window.showPage = function (n) {
+    current = n;
+    document.querySelectorAll('.tab').forEach(function (t) {
+      t.classList.toggle('is-active', String(t.dataset.tab) === String(n));
+    });
+    document.querySelectorAll('.sheet').forEach(function (s) {
+      s.classList.toggle('hidden', n !== 'all' && String(s.dataset.page) !== String(n));
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  var KEY = 'cahier_journal_fr_v2';
+  var memory = null;
+  function readStore() {
+    try { return localStorage.getItem(KEY); } catch (e) { return memory; }
+  }
+  function writeStore(v) {
+    try { localStorage.setItem(KEY, v); } catch (e) { memory = v; }
+  }
+  function collect() {
+    var data = {};
+    document.querySelectorAll('#cahier input, #cahier textarea, #cahier select').forEach(function (el) {
+      if (!el.id) return;
+      data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+    });
+    data.__manuel = [];
+    document.querySelectorAll('[data-manual="1"]').forEach(function (el) {
+      if (el.id) data.__manuel.push(el.id);
+    });
+    return data;
+  }
+  window.saveAll = function (silent) {
+    writeStore(JSON.stringify(collect()));
+    if (!silent) toast('Cahier journal enregistré dans ce navigateur.');
+  };
+  function restore() {
+    var raw = readStore(); if (!raw) return;
+    try {
+      var data = JSON.parse(raw);
+      Object.keys(data).forEach(function (id) { if (id !== '__manuel') setVal(id, data[id]); });
+      (data.__manuel || []).forEach(function (id) {
+        var el = byId(id); if (el) el.setAttribute('data-manual', '1');
+      });
+    } catch (e) { }
+  }
+  function setVal(id, v) {
+    var el = byId(id); if (!el) return;
+    if (el.type === 'checkbox') el.checked = !!v; else el.value = v;
+  }
+  window.clearAll = function () {
+    var ok = true;
+    try { ok = window.confirm('Effacer toutes les saisies du cahier journal ?'); } catch (e) { ok = true; }
+    if (!ok) return;
+    document.querySelectorAll('#cahier input, #cahier textarea').forEach(function (el) {
+      if (el.type === 'checkbox') el.checked = false; else el.value = '';
+      el.removeAttribute('data-manual');
+    });
+    try { localStorage.removeItem(KEY); } catch (e) { memory = null; }
+    toast('Toutes les pages ont été remises à zéro.');
+  };
+
+  var timer = null;
+  document.addEventListener('input', function (e) {
+    if (!e.target.closest || !e.target.closest('#cahier')) return;
+    clearTimeout(timer);
+    timer = setTimeout(function () { window.saveAll(true); }, 700);
+  });
+  document.addEventListener('change', function (e) {
+    if (e.target.type === 'checkbox' || e.target.tagName === 'SELECT') window.saveAll(true);
+  });
+
+  function markFirst() {
+    var sheets = document.querySelectorAll('.sheet');
+    sheets.forEach(function (s) { s.classList.remove('is-first'); });
+    var visible = document.querySelectorAll('.sheet:not(.hidden)');
+    if (visible.length) visible[0].classList.add('is-first');
+  }
+  window.printCurrent = function () { markFirst(); window.print(); };
+  window.printAll = function () {
+    window.showPage('all');
+    setTimeout(function () { markFirst(); window.print(); }, 250);
+  };
+
+  function syncFields(root) {
+    root.querySelectorAll('textarea').forEach(function (t) { t.textContent = t.value; });
+    root.querySelectorAll('input[type="text"], input[type="email"]').forEach(function (i) {
+      i.setAttribute('value', i.value);
+    });
+    root.querySelectorAll('input[type="checkbox"]').forEach(function (c) {
+      if (c.checked) c.setAttribute('checked', 'checked'); else c.removeAttribute('checked');
+    });
+  }
+
+  var fieldSwaps = [];
+  function freezeFields(root) {
+    root.querySelectorAll('input, textarea').forEach(function (el) {
+      var cs = window.getComputedStyle(el);
+      var echo = document.createElement('div');
+      var st = echo.style;
+      echo.className = 'pdf-echo';
+      st.boxSizing = 'border-box';
+      st.width = cs.width;
+      st.height = cs.height;
+      st.marginTop = cs.marginTop; st.marginRight = cs.marginRight;
+      st.marginBottom = cs.marginBottom; st.marginLeft = cs.marginLeft;
+      st.flex = '0 0 auto';
+      st.verticalAlign = 'middle';
+      ['Top', 'Right', 'Bottom', 'Left'].forEach(function (side) {
+        st['border' + side + 'Width'] = cs['border' + side + 'Width'];
+        st['border' + side + 'Style'] = cs['border' + side + 'Style'];
+        st['border' + side + 'Color'] = cs['border' + side + 'Color'];
+      });
+      st.borderRadius = cs.borderRadius;
+
+      if (el.type === 'checkbox') {
+        st.display = 'inline-block';
+        st.borderWidth = '1px'; st.borderStyle = 'solid'; st.borderColor = '#5d4bab';
+        st.borderRadius = '2px';
+        st.textAlign = 'center';
+        st.lineHeight = cs.height;
+        st.fontSize = '9px';
+        st.color = '#ffffff';
+        st.backgroundColor = el.checked ? '#5d4bab' : '#ffffff';
+        if (el.checked) echo.textContent = '\u2713';
+      } else {
+        var pt = parseFloat(cs.paddingTop) || 0;
+        var pb = parseFloat(cs.paddingBottom) || 0;
+        var bb = parseFloat(cs.borderBottomWidth) || 0;
+        var bt = parseFloat(cs.borderTopWidth) || 0;
+        st.paddingTop = cs.paddingTop; st.paddingRight = cs.paddingRight;
+        st.paddingBottom = cs.paddingBottom; st.paddingLeft = cs.paddingLeft;
+        st.fontFamily = cs.fontFamily; st.fontSize = cs.fontSize;
+        st.fontWeight = cs.fontWeight; st.fontStyle = cs.fontStyle;
+        st.letterSpacing = cs.letterSpacing; st.color = cs.color;
+        st.textAlign = cs.textAlign;
+        st.backgroundColor = cs.backgroundColor;
+        st.overflow = 'hidden';
+        if (el.tagName === 'TEXTAREA') {
+          st.display = 'block';
+          st.whiteSpace = 'pre-wrap';
+          st.lineHeight = cs.lineHeight;
+          st.backgroundImage = cs.backgroundImage;
+        } else {
+          st.display = 'inline-block';
+          st.whiteSpace = 'nowrap';
+          var inner = (parseFloat(cs.height) || 0) - pt - pb - bb - bt;
+          st.lineHeight = (inner > 0 ? inner : (parseFloat(cs.fontSize) || 12) * 1.4) + 'px';
+        }
+        echo.textContent = el.value;
+      }
+      el.parentNode.insertBefore(echo, el);
+      fieldSwaps.push({ el: el, echo: echo, display: el.style.display });
+      el.style.display = 'none';
+    });
+  }
+  function unfreezeFields() {
+    fieldSwaps.forEach(function (paire) {
+      paire.el.style.display = paire.display || '';
+      if (paire.echo && paire.echo.parentNode) paire.echo.parentNode.removeChild(paire.echo);
+    });
+    fieldSwaps = [];
+  }
+
+  var svgSwaps = [];
+
+  function rasterizeSvg(svg) {
+    return new Promise(function (resolve, reject) {
+      var rect = svg.getBoundingClientRect();
+      var w = Math.max(1, Math.round(rect.width || svg.getAttribute('width') || 200));
+      var h = Math.max(1, Math.round(rect.height || svg.getAttribute('height') || 200));
+      var clone = svg.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('width', w);
+      clone.setAttribute('height', h);
+      clone.style.color = window.getComputedStyle(svg).color;
+      var source = svg.querySelectorAll('[class]');
+      var target = clone.querySelectorAll('[class]');
+      for (var i = 0; i < target.length && i < source.length; i++) {
+        target[i].style.color = window.getComputedStyle(source[i]).color;
+      }
+      var xml = new XMLSerializer().serializeToString(clone);
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var c = document.createElement('canvas');
+          c.width = w * 3; c.height = h * 3;
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          resolve({ png: c.toDataURL('image/png'), w: w, h: h });
+        } catch (e) { reject(e); }
+      };
+      img.onerror = function () { reject(new Error('dessin illisible')); };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+    });
+  }
+
+  function prepareGraphics(root) {
+    var list = [];
+    (root || document).querySelectorAll('svg').forEach(function (svg) { list.push(svg); });
+    return Promise.all(list.map(function (svg) {
+      return rasterizeSvg(svg).then(function (r) {
+        var img = document.createElement('img');
+        img.src = r.png;
+        img.className = svg.getAttribute('class') || '';
+        img.setAttribute('alt', svg.getAttribute('aria-label') || '');
+        svg.parentNode.insertBefore(img, svg);
+        svg.style.display = 'none';
+        svgSwaps.push({ svg: svg, img: img });
+      })['catch'](function (e) {
+        console.warn('Dessin ignoré dans le PDF', e);
+        svg.style.display = 'none';
+        svgSwaps.push({ svg: svg, img: null });
+      });
+    }));
+  }
+
+  function restoreGraphics() {
+    svgSwaps.forEach(function (pair) {
+      pair.svg.style.display = '';
+      if (pair.img && pair.img.parentNode) pair.img.parentNode.removeChild(pair.img);
+    });
+    svgSwaps = [];
+  }
+
+  function pdfOptions(fichier) {
+    return {
+      margin: 0,
+      filename: fichier,
+      image: { type: 'jpeg', quality: 0.92 },
+      html2canvas: {
+        scale: 1.8, useCORS: true, allowTaint: false, logging: false,
+        backgroundColor: '#ffffff', scrollX: 0, scrollY: 0, imageTimeout: 0
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
+      pagebreak: { mode: 'avoid-all' }
+    };
+  }
+
+  window.downloadPageAsPDF = function (btn) {
+    var sheet = btn.closest('.sheet');
+    if (!sheet) return;
+    var label = btn.textContent;
+    var wasHidden = sheet.classList.contains('hidden');
+    var done = false, guard = null;
+
+    function stop(message, longue) {
+      if (done) return;
+      done = true;
+      clearTimeout(guard);
+      restoreGraphics();
+      unfreezeFields();
+      document.body.classList.remove('exporting');
+      document.body.classList.remove('exporting-flat');
+      if (wasHidden) sheet.classList.add('hidden');
+      btn.disabled = false; btn.textContent = label;
+      if (message) toast(message, longue);
+    }
+    function fail(err) {
+      console.error('Export PDF —', err);
+      var detail = err && (err.message || err.name) ? ' (' + String(err.message || err.name).slice(0, 70) + ')' : '';
+      stop('Échec de la génération' + detail + '. Utilisez « Imprimer cette page » puis « Enregistrer au format PDF ».', true);
+    }
+
+    if (typeof html2pdf === 'undefined') {
+      stop('Générateur PDF non chargé : vérifiez la connexion internet.', true);
+      return;
+    }
+
+    if (wasHidden) sheet.classList.remove('hidden');
+    markFirst();
+    sheet.classList.add('is-first');
+    syncFields(sheet);
+    freezeFields(sheet);
+    document.body.classList.add('exporting');
+    btn.disabled = true; btn.textContent = '…';
+
+    guard = setTimeout(function () {
+      stop('La génération a été interrompue au bout de 30 secondes.', true);
+    }, 30000);
+
+    var titre = (sheet.getAttribute('aria-label') || 'page').trim();
+    var nom = (byId('c_ens') && byId('c_ens').value.trim()) || 'francais';
+    var fichier = 'Cahier-journal-' +
+      (nom + '-' + titre).replace(/[^\w\u00C0-\u017F -]/g, '').replace(/\s+/g, '-') + '.pdf';
+
+    toast('Préparation du PDF…');
+
+    prepareGraphics(sheet)
+      .then(function () { return html2pdf().set(pdfOptions(fichier)).from(sheet).save(); })
+      .then(function () { stop('PDF téléchargé : ' + fichier + '.'); })
+      ['catch'](function (err1) {
+        console.warn('Nouvelle tentative en mode simplifié', err1);
+        document.body.classList.add('exporting-flat');
+        return html2pdf().set(pdfOptions(fichier)).from(sheet).save()
+          .then(function () { stop('PDF téléchargé : ' + fichier + '.'); });
+      })
+      ['catch'](function (err) { fail(err); });
+  };
+
+  function pdfButtonHTML() {
+    return '<button class="btn btn--pdf" type="button" onclick="downloadPageAsPDF(this)" title="Télécharger cette page en PDF">⬇ PDF</button>';
+  }
+  function addPageToolbars() {
+    document.querySelectorAll('.sheet').forEach(function (sheet) {
+      var tools = sheet.querySelector('.sheet-tools');
+      if (!tools) {
+        tools = document.createElement('div');
+        tools.className = 'sheet-tools no-print';
+        sheet.insertBefore(tools, sheet.firstChild);
+      }
+      if (!tools.querySelector('.btn--pdf')) {
+        tools.insertAdjacentHTML('afterbegin', pdfButtonHTML());
+      }
+    });
+  }
+
+  var clones = 0;
+  window.duplicatePage = function (btn) {
+    var src = btn.closest('.sheet');
+    var copy = src.cloneNode(true);
+    clones++;
+    var suffix = '_c' + clones;
+    copy.id = src.id + suffix;
+    copy.querySelectorAll('[id]').forEach(function (el) { el.id = el.id + suffix; });
+    copy.querySelectorAll('label[for]').forEach(function (l) { l.htmlFor = l.htmlFor + suffix; });
+    copy.querySelectorAll('input, textarea').forEach(function (el) {
+      if (el.type === 'checkbox') el.checked = false; else el.value = '';
+      el.removeAttribute('data-manual');
+    });
+    var tools = copy.querySelector('.sheet-tools');
+    tools.innerHTML = pdfButtonHTML() +
+      '<button class="btn" type="button" onclick="duplicatePage(this)">＋ Dupliquer</button>' +
+      '<button class="btn btn--danger" type="button" onclick="removePage(this)">Supprimer</button>';
+    var group = document.querySelectorAll('[data-page="' + src.dataset.page + '"]');
+    group[group.length - 1].after(copy);
+    copy.classList.remove('hidden');
+    renderCalendar(copy);
+    copy.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast('Page ajoutée à la suite.');
+  };
+  window.removePage = function (btn) {
+    btn.closest('.sheet').remove();
+    window.saveAll(true);
+    toast('Page supprimée.');
+  };
+
+  var toastTimer = null;
+  function toast(msg, longue) {
+    var t = byId('toast');
+    t.textContent = msg;
+    t.classList.add('is-on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove('is-on'); }, longue ? 9000 : 2600);
+  }
+
+  var C = {
+    heart: '#ead9ab', heartLine: '#a8863a',
+    wing: '#efe9fd', wing2: '#f9dfeb', wingLine: '#9585db'
+  };
+
+  function butterflyHTML(cls) {
+    return '<svg class="orn ' + cls + '" viewBox="0 0 64 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">' +
+      '<g stroke="' + C.wingLine + '" stroke-width="1.3" stroke-linejoin="round">' +
+        '<path d="M32 17C26 5 13 2 8 8 3 15 15 23 32 25Z" fill="' + C.wing + '"/>' +
+        '<path d="M32 17C38 5 51 2 56 8 61 15 49 23 32 25Z" fill="' + C.wing + '"/>' +
+        '<path d="M32 25C23 27 13 32 15 39 17 45 28 39 32 31Z" fill="' + C.wing2 + '"/>' +
+        '<path d="M32 25C41 27 51 32 49 39 47 45 36 39 32 31Z" fill="' + C.wing2 + '"/>' +
+      '</g>' +
+      '<g fill="' + C.heart + '"><circle cx="18" cy="12" r="2"/><circle cx="46" cy="12" r="2"/>' +
+      '<circle cx="23" cy="35" r="1.4"/><circle cx="41" cy="35" r="1.4"/></g>' +
+      '<g fill="none" stroke="' + C.wingLine + '" stroke-width="1.4" stroke-linecap="round">' +
+        '<path d="M32 14v18"/><path d="M32 14C30 9 27 6 23 4"/><path d="M32 14C34 9 37 6 41 4"/>' +
+      '</g></svg>';
+  }
+
+  function addOrnaments() {
+    document.querySelectorAll('.sheet').forEach(function (sheet) {
+      if (sheet.querySelector('.orn')) return;
+      var deco = butterflyHTML('orn--fly1') + butterflyHTML('orn--fly2');
+      sheet.insertAdjacentHTML('afterbegin', deco);
+    });
+  }
+
+  window.fillModel = function () {
+    var m = {
+      c_ens: 'Mme BENALI Souad', c_etab: 'Lycée Ibn Khaldoun', c_com: 'El Biar', c_wil: 'Alger',
+      c_niv: '1AS TC Lettres · 2AS Lettres et Philosophie · 3AS Sciences expérimentales', c_annee: '2026 - 2027',
+      i_nom: 'BENALI Souad', i_naiss: '18/04/1986 à Alger', i_adr1: 'Cité des 500 Logements, Bt 04, n° 12',
+      i_adr2: 'El Biar, Alger', i_tel: '06 61 23 45 67', i_mail: 's.benali@education.dz',
+      i_mat: 'ENS-SEC-2010-8842', i_rec: '15/09/2010', i_corps: 'PES — Professeur de l\'enseignement secondaire',
+      i_grade: 'Professeur principal', i_fonc: 'Enseignante de français', i_mat_ens: 'Langue française',
+      i_niveaux: '1AS TC L · 2AS L&Ph · 3AS SE', i_etab: 'Lycée Ibn Khaldoun', i_commune: 'El Biar', i_wilaya: 'Alger',
+      i_anc_g: '16 ans', i_anc_p: '8 ans', i_dipl: 'Master en didactique du FLE et littérature',
+      i_form: 'ENS de Bouzaréah, Alger', i_annee: '2026 - 2027', i_horaire: '18 h / semaine',
+      i_acc_nom: 'M. KHALDI Sofiane', i_acc_fonc: 'Professeur formateur', i_acc_tel: '05 50 12 34 56',
+      i_insp: 'M. LAMRI Kamel', i_coord: 'Mme SAADI Nadia',
+      i_obs: 'Animation de l\'atelier d\'écriture et du club de lecture.',
+      e_etab: 'Lycée Ibn Khaldoun', e_annee: '2026 - 2027', e_ens: 'Mme BENALI Souad', e_classes: '3AS SE · 2AS L&Ph · 1AS TC L',
+      edt_0_1: '3AS SE — S08', edt_0_2: '2AS L&Ph — S12', edt_0_3: '1AS TC L — S04', edt_1_1: '3AS SE — S08',
+      t_etab: 'Lycée Ibn Khaldoun', t_ens: 'Mme BENALI Souad', t_dir: 'M. HAMDI Rachid',
+      pl_0_1: '3AS SE\nS08', pl_0_2: '2AS L&Ph\nS12', pl_cls_1: '3AS SE (32)', pl_cls_2: '2AS L&Ph (28)',
+      v_etab: 'Lycée Ibn Khaldoun', v_annee: '2026 - 2027', v_ens: 'Mme BENALI Souad',
+      vac_0_d: '29/10/2026', vac_0_f: '03/11/2026', vac_0_n: '05',
+      vac_1_d: '17/12/2026', vac_1_f: '03/01/2027', vac_1_n: '15',
+      vac_2_d: '18/03/2027', vac_2_f: '04/04/2027', vac_2_n: '15',
+      vac_3_d: '08/07/2027', vac_3_f: '31/08/2027', vac_3_n: '54',
+      fer_1_date: '01/11/2026', fer_1_jour: 'Dimanche', fer_1_nom: 'Fête de la Révolution', fer_1_obs: 'Exposé : le texte d\'histoire',
+      v_c1: 'Du 29/11/2026 au 03/12/2026', v_c2: 'Du 28/02/2027 au 04/03/2027',
+      v_c3: 'Du 16/05/2027 au 20/05/2027', v_bac: 'Baccalauréat blanc : mars 2027',
+      sem_1_date: '12/10/2026', sem_1_theme: 'L\'approche par compétences en 3AS',
+      sem_1_org: 'Inspection de la circonscription', sem_1_lieu: 'Lycée H. Ben Bouali', sem_1_duree: '1 journée',
+      sem_1_pts: 'Exploitation didactique de l\'archive. Compte rendu objectif.',
+      sem_1_reinv: 'Grille de compte rendu appliquée en 3AS.',
+      jp_1_date: '05/10/2026', jp_1_lieu: 'Lycée Ibn Khaldoun', jp_1_theme: 'Harmonisation des barèmes',
+      w_classe: '3AS SE · 2AS L&Ph', w_periode: 'Semaine du 20 au 24/09/2026', w_trim: '1er trimestre',
+      w_1_date: '20/09/2026', w_1_classe: '3AS SE', w_1_heure: '08:00 - 09:00',
+      w_1_travail: 'Évaluation diagnostique : texte informatif.', w_1_obs: 'Acquis satisfaisants.',
+      w_2_date: '20/09/2026', w_2_classe: '2AS L&Ph', w_2_heure: '09:00 - 10:00',
+      w_2_travail: 'Projet 1 / séquence 1 : compréhension de l\'oral.', w_2_obs: 'Participation active.',
+      l_classe: '3AS SE 1', l_niveau: '3AS Sciences expérimentales', l_eff: '35', l_annee: '2026 - 2027',
+      l_trim: '1er trimestre', l_del: 'AMRANI Yacine', l_g: '16', l_f: '19', l_moy: '12,45',
+      el_1_nom: 'AMRANI Yacine', el_1_naiss: '12/03/2009', el_1_sexe: 'M',
+      el_1_ec: '13', el_1_tp: '14,5', el_1_dev: '12', el_1_compo: '13,5',
+      el_2_nom: 'BELKACEM Lina', el_2_naiss: '05/07/2009', el_2_sexe: 'F',
+      el_2_ec: '15', el_2_tp: '16', el_2_dev: '14,5', el_2_compo: '15,5',
+      f_num: '01', f_date: '22/09/2026', f_classe: '3AS Sciences expérimentales', f_duree: '1 h',
+      f_projet: 'Projet 1 : dossier documentaire sur un fait d\'histoire.',
+      f_sequence: 'Séquence 1 : informer d\'un fait d\'histoire.', f_objet: 'Le texte d\'histoire',
+      f_comp: 'Comprendre et analyser un texte d\'histoire.',
+      f_savoir: 'Structure du texte d\'histoire.',
+      f_sf: 'Repérer les marques de l\'objectivité.',
+      f_se: 'Esprit critique.',
+      f_s_page: '14-16',
+      f_cr1: 'L\'élève identifie la visée informative.',
+      f_cr2: 'L\'élève distingue le fait du témoignage.',
+      f_cr3: 'L\'élève reformule l\'idée générale.',
+      f_diff: 'Guidage de la lecture pour les élèves en difficulté.',
+      f_bilan: 'Bonne participation.',
+      ph_0_act: 'Observation de l\'image d\'archive.',
+      ph_1_act: 'Lecture silencieuse puis magistrale.',
+      ph_2_act: 'Analyse des faits / commentaires.',
+      ph_3_act: 'Trace écrite.',
+      ph_4_act: 'Question de synthèse.',
+      p_semaine: '20 au 24 septembre 2026', p_trim: '1er trimestre',
+      p_projet: 'Projet 1 : dossier documentaire.',
+      p_seq: 'Séquence 1 : informer d\'un fait d\'histoire.',
+      p_obj: 'Restituer l\'essentiel d\'un texte d\'histoire.',
+      pn_1_jour: 'Dim. 20/09', pn_1_classe: '3AS SE', pn_1_act: 'Évaluation diagnostique',
+      pn_1_contenu: 'Texte informatif — manuel p. 12', pn_1_devoir: 'Lexique de l\'histoire',
+      pn_2_jour: 'Mar. 22/09', pn_2_classe: '3AS SE', pn_2_act: 'Compréhension de l\'écrit',
+      pn_2_contenu: 'Le texte d\'histoire', pn_2_devoir: 'Plan du texte',
+      p_bilan: 'Séquence 1 lancée.',
+      p_report: 'Rattrapage prévu.',
+      ev_classe: '3AS SE 1', ev_niveau: '3AS Sciences expérimentales', ev_trim: '1er trimestre', ev_annee: '2026 - 2027',
+      ev_projet: 'Projet 1 / séquence 1.',
+      ev_periode: 'Du 20/09 au 30/10/2026',
+      ev_1_nom: 'AMRANI Yacine', ev_1_part: '13', ev_1_dev: '12', ev_1_exo: '14', ev_1_int: '12,5', ev_1_cah: '15', ev_1_com: '16',
+      ev_1_obs: 'Prend la parole plus souvent.',
+      ev_2_nom: 'BELKACEM Lina', ev_2_part: '16', ev_2_dev: '15', ev_2_exo: '15,5', ev_2_int: '15', ev_2_cah: '17', ev_2_com: '18',
+      ev_2_obs: 'Progrès nets.',
+      ev_moy_cl: '12,80', ev_sup: '22 / 35', ev_rem: 'Atelier de compte rendu.',
+      cc_classe: '3AS SE 1', cc_niveau: '3AS Sciences expérimentales', cc_eff: '35', cc_trim: '1er trimestre',
+      cc_date: '07/12/2026', cc_heure: '14:00 - 16:00', cc_lieu: 'Salle des professeurs',
+      cc_pres: 'M. HAMDI Rachid', cc_pp: 'Mme BENALI Souad',
+      cc_ordre: 'Bilan du 1er trimestre.',
+      cc_m_0_nom: 'M. HAMDI Rachid', cc_m_1_nom: 'Mme ZERROUKI Amel', cc_m_2_nom: 'Mme BENALI Souad',
+      cc_m_3_nom: 'Mme BENALI Souad', cc_m_4_nom: 'AMRANI Yacine', cc_m_5_nom: 'M. TALEB Djamel',
+      cc_m_4_obs: 'Remarques des élèves.',
+      cc_moy: '12,45', cc_max: '17,25', cc_min: '06,50', cc_sup: '23', cc_inf: '12', cc_taux: '65,7 %',
+      cc_d_0_eleves: 'BELKACEM Lina, MEZIANE Sarah', cc_d_0_nb: '02',
+      cc_d_1_eleves: 'AMRANI Yacine, HADDAD Rym', cc_d_1_nb: '02',
+      cc_d_3_eleves: 'BOUZID Karim', cc_d_3_nb: '01',
+      cc_diff: 'Compte rendu proche de la paraphrase.',
+      cc_reco: 'Remédiation le mercredi.'
+    };
+    Object.keys(m).forEach(function (k) { setVal(k, m[k]); });
+    recalcAll();
+    ['f_a_ce', 'f_s_manuel', 'f_s_tab', 'f_d_lec', 'f_b_ok', 'ph_0_col', 'ph_1_col', 'ph_2_bin', 'ph_3_ind', 'ph_4_ind',
+     'cc_m_0_p', 'cc_m_1_p', 'cc_m_2_p', 'cc_m_3_p', 'cc_m_4_p', 'cc_m_5_a']
+      .forEach(function (k) { setVal(k, true); });
+    window.saveAll(true);
+    toast('Exemple chargé : adaptez les données à votre situation.');
+  };
+
+  function recalcAll() {
+    document.querySelectorAll('[data-role="moy"]').forEach(function (el) {
+      var tr = el.closest('tr'); if (tr) computeRow(tr);
+    });
+    document.querySelectorAll('[data-ev="moy"]').forEach(function (el) {
+      var tr = el.closest('tr'); if (tr) computeEvalRow(tr);
+    });
+  }
+
+  restore();
+  recalcAll();
+  renderAllCalendars();
+  addPageToolbars();
+  addOrnaments();
+  window.addEventListener('beforeprint', markFirst);
+})();
+</script>
+</div> <!-- Fin de zone-protegee -->
+</body>
+</html>
